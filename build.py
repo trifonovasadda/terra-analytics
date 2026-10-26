@@ -93,7 +93,7 @@ def load(now):
             "pay_dt": pay_dt,
             "amount": float(r[ix["Оплачено"]] or 0),
             "manager": re.sub(r"^(\S+) \1 ", r"\1 ", r[ix["Менеджер"]] or ""),
-            "source": r[ix["user_utm_source"]] or r[ix["utm_source"]] or r[ix["deal_utm_source"]],
+            "source": next((r[ix[k]] for k in ("user_utm_source", "utm_source", "deal_utm_source", "gc_system_deal_utm_source") if k in ix and r[ix[k]]), ""),
         })
     return deals
 
@@ -455,8 +455,9 @@ def insights(data):
         f"На конец месяца в клубе {m['active_end']} (месяцем раньше {p['active_end']})."
         + ("" if net >= 0 else " Новых меньше, чем ушедших — клубу нужен приток: прогрев внутри основных продуктов и работа с архивом."))
     lt = data["ltv"]
-    add(lt["avg_months"] >= 6, f"Участник в среднем остаётся {lt['avg_months']:.1f} мес".replace(".", ","),
-        f"Ориентир — от 6 месяцев. До полугода доживают {lt['share_6m'] or 0:.0f}% участников, средний LTV {fmt(lt['avg'])} ₽.")
+    if lt["share_6m"] is not None:
+        add(lt["avg_months"] >= 6, f"Участник в среднем остаётся {lt['avg_months']:.1f} мес".replace(".", ","),
+            f"Ориентир — от 6 месяцев. До полугода доживают {lt['share_6m'] or 0:.0f}% участников, средний LTV {fmt(lt['avg'])} ₽.")
     if p["new"]:
         ch = (m["new"] - p["new"]) / p["new"] * 100
         add(ch >= 0, f"Новых участников {'больше' if ch >= 0 else 'меньше'} на {abs(ch):.0f}%",
