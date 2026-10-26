@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Аналитика Территории Нити Жизни</title>
+<style>
+:root{
+  --bg:#F8F3E8; --card:#FFFDF7; --ink:#173D2D; --ink2:#4E6358; --muted:#8A958C;
+  --line:#E6DCC6; --grid:#EEE6D5; --olive:#173D2D; --olive2:#2E5A45;
+  --sand:#B99145; --terra:#B99145; --good:#1E7148; --bad:#B5452F;
+  --s-renew:#1E7148; --s-new:#C8932F; --s-return:#B5452F;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);min-height:100vh}
+.wrap{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+h1{font:400 46px/1.08 var(--serif);margin:0 0 10px;letter-spacing:-.01em}
+h1 em{color:var(--sand);font-style:italic}
+h2{font:400 28px/1.2 var(--serif);margin:48px 0 6px}
+h3{font:600 14px/1.3 var(--sans);margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin-bottom:14px}
+.sub{color:var(--ink2);font-size:13px;margin:0 0 16px}
+.meta{color:var(--ink2);font-size:13px}
+.meta a{color:var(--ink2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:20px;box-shadow:0 1px 2px rgba(23,61,45,.04)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:24px}
+.kpi{padding:16px}
+.kpi .l{font-size:12px;color:var(--ink2);display:flex;justify-content:space-between;gap:6px;min-height:32px}
+.kpi .v{font:600 26px/1.15 var(--sans);white-space:nowrap;margin:6px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink2)}
+.kpi.hero{background:#173D2D;color:#fff;border:0}
+.kpi.hero .l,.kpi.hero .s{color:rgba(255,255,255,.8)}
+.kpi.hero .s b{color:#D9B977;font-weight:600}
+.q{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--grid);color:var(--ink2);font:600 10px/16px var(--sans);justify-content:center;cursor:help;flex:none;position:relative}
+.hero .q{background:rgba(255,255,255,.18);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font:500 12px/1.3 var(--sans);color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;text-align:right;border-bottom:1px solid var(--grid);font-size:14px;vertical-align:top}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+tr:last-child td{border-bottom:0}
+td{white-space:nowrap} td:first-child{white-space:normal}
+td small{display:block;color:var(--muted);font-size:11px}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--grid);gap:12px}
+.row:last-child{border-bottom:0}
+.row .n{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .n small{font-weight:400;color:var(--muted);margin-left:4px}
+.bar{height:6px;border-radius:3px;background:var(--grid);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--olive2);border-radius:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:11px var(--sans);fill:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:#283127;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.tip b{font-weight:600}
+.tip i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.cohort td{text-align:center;font-size:12px;padding:6px 4px;border-bottom:2px solid #fff;border-right:2px solid #fff}
+.cohort td:first-child,.cohort td:nth-child(2){text-align:left;background:none;white-space:nowrap}
+.cohort th{text-align:center}
+.insights{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ins{border-left:3px solid var(--bad);padding:16px 18px}
+.ins.good{border-left-color:var(--good)}
+.ins .tag{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.ins.bad .tag{color:var(--bad)} .ins.good .tag{color:var(--good)}
+.ins .t{font:400 19px/1.3 var(--serif);margin-bottom:6px}
+.ins p{margin:0;color:var(--ink2);font-size:14px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.tabs{display:inline-flex;background:var(--grid);border-radius:2px;padding:3px;margin-bottom:12px}
+.tabs button{border:0;background:none;font:500 13px var(--sans);padding:6px 12px;border-radius:8px;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* вход */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+#gate form{width:100%;max-width:360px;text-align:left}
+#gate input{width:100%;font:16px var(--sans);padding:12px 14px;border:1px solid var(--line);border-radius:0;background:#fff;margin:14px 0 12px;outline:none}
+#gate input:focus{border-color:var(--olive2)}
+#gate button{width:100%;font:600 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#fff;border:0;border-radius:0;padding:15px;background:#173D2D;cursor:pointer}
+#gate .err{color:var(--bad);font-size:13px;min-height:18px;margin-top:10px}
+#app{display:none}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){h1{font-size:34px}.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3,.insights{grid-template-columns:1fr}.kpi .v{font-size:26px}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="card" autocomplete="on">
+    <div class="eyebrow">Территория Нити Жизни</div>
+    <h1 style="font-size:32px">Аналитика <em>клуба</em></h1>
+    <div class="meta">Введите пароль, чтобы открыть отчёт</div>
+    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
+    <button type="submit">Войти</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<div id="app"><div class="wrap" id="root"></div></div>
+<div class="tip" id="tip"></div>
+
+<script>
+const DATA_URL = 'data.enc.json';
+const $ = (s, el = document) => el.querySelector(s);
+const nf = new Intl.NumberFormat('ru-RU');
+const fmt = n => nf.format(Math.round(n));
+const rub = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace('.', ',').replace(/,?0+$/, '') + ' млн ₽'
+  : n >= 1e4 ? fmt(n / 1000) + ' тыс ₽' : fmt(n) + ' ₽';
+const pct = n => n == null ? '—' : String(Math.round(n * 10) / 10).replace('.', ',') + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const mlabel = (k, withYear) => { const [y, m] = k.split('-'); return MON[m - 1] + (withYear || m === '01' ? ' ' + y.slice(2) : ''); };
+
+/* ---------- расшифровка ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(pkg, password) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(pkg.salt), iterations: pkg.iter, hash: 'SHA-256'},
+    base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(pkg.iv)}, key, b64(pkg.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function open(password, remember) {
+  const pkg = await fetch(DATA_URL + '?t=' + Date.now(), {cache: 'no-store'}).then(r => r.json());
+  const data = await decrypt(pkg, password);
+  if (remember) try { sessionStorage.setItem('tnj_pw', password); } catch (e) {}
+  $('#gate').style.display = 'none';
+  $('#app').style.display = 'block';
+  render(data);
+}
+$('#gate form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  try { await open($('#pw').value, true); }
+  catch (err) { $('#err').textContent = err.name === 'OperationError' ? 'Неверный пароль' : 'Не удалось загрузить данные'; }
+});
+try { const saved = sessionStorage.getItem('tnj_pw'); if (saved) open(saved, false).catch(() => {}); } catch (e) {}
+
+/* ---------- подсказки ---------- */
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = x + scrollX + 'px'; tip.style.top = y + scrollY + 'px';
+}
+const hideTip = () => tip.style.opacity = 0;
+document.addEventListener('mouseover', e => { const q = e.target.closest('[data-tip]'); if (q) showTip(esc(q.dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mousemove', e => { if (e.target.closest('[data-tip]')) showTip(esc(e.target.closest('[data-tip]').dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mouseout', e => { if (e.target.closest('[data-tip]')) hideTip(); });
+const q = text => `<span class="q" data-tip="${esc(text)}" tabindex="0">?</span>`;
+
+/* ---------- графики (SVG) ---------- */
+function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v || 1))); return Math.ceil(v / p / 2) * p * 2; }
+function axisFmt(v, money) { return money ? (v >= 1e6 ? (v / 1e6).toString().replace('.', ',') + ' млн' : v >= 1e3 ? fmt(v / 1e3) + ' тыс' : v) : (v >= 1e3 ? (v / 1e3).toString().replace('.', ',') + ' тыс' : v); }
+
+function stackedBars(el, rows, series, opts = {}) {
+  const W = 1000, H = 300, L = 56, B = 28, T = 10;
+  const max = niceMax(Math.max(...rows.map(r => series.reduce((s, x) => s + r[x.key], 0))));
+  const n = rows.length, slot = (W - L) / n, bw = Math.min(56, slot * .62);
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${axisFmt(v, true)}</text>`; }
+  rows.forEach((r, i) => {
+    const x = L + slot * i + (slot - bw) / 2; let acc = 0;
+    const tipHtml = `<b>${esc(r.name)}${r.partial ? ' (идёт)' : ''}</b><br>` + series.map(sr => `<i style="background:${sr.color}"></i>${sr.label}: ${rub(r[sr.key])}`).join('<br>') + `<br>Всего: <b>${rub(series.reduce((a, sr) => a + r[sr.key], 0))}</b>`;
+    s += `<g class="hov" data-html="${esc(tipHtml)}" opacity="${r.partial ? .55 : 1}">`;
+    s += `<rect x="${L + slot * i}" y="${T}" width="${slot}" height="${H - T - B}" fill="transparent"/>`;
+    const visible = series.filter(sr => r[sr.key] > 0);
+    visible.forEach((sr, j) => {
+      const v = r[sr.key]; const y0 = y(acc), y1 = y(acc + v); acc += v;
+      const h = Math.max(0, y0 - y1 - (j ? 2 : 0)); const top = j === visible.length - 1;
+      s += top ? `<path d="M${x},${y1 + h} v${-(h - 4)} q0,-4 4,-4 h${bw - 8} q4,0 4,4 v${h - 4} z" fill="${sr.color}"/>`
+        : `<rect x="${x}" y="${y1}" width="${bw}" height="${h}" fill="${sr.color}"/>`;
+    });
+    s += `</g><text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${mlabel(r.month)}</text>`;
+  });
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function lineChart(el, rows, key, opts = {}) {
+  const W = 520, H = 250, L = 40, B = 26, T = 14;
+  const vals = rows.map(r => r[key]);
+  const max = opts.max || niceMax(Math.max(...vals.filter(v => v != null)));
+  const n = rows.length, x = i => L + (W - L - 12) * (n === 1 ? .5 : i / (n - 1));
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${opts.pct ? v + '%' : axisFmt(v)}</text>`; }
+  const pts = rows.map((r, i) => r[key] == null ? null : [x(i), y(r[key])]);
+  let d = '', area = '';
+  pts.forEach((p, i) => { if (!p) return; d += (d ? 'L' : 'M') + p[0] + ',' + p[1]; });
+  const valid = pts.filter(Boolean);
+  if (valid.length) area = `M${valid[0][0]},${y(0)}` + valid.map(p => `L${p[0]},${p[1]}`).join('') + `L${valid[valid.length - 1][0]},${y(0)}Z`;
+  s += `<path d="${area}" fill="var(--olive2)" opacity=".08"/><path d="${d}" fill="none" stroke="var(--s-renew)" stroke-width="2" stroke-linejoin="round"/>`;
+  const step = Math.ceil(n / 8);
+  rows.forEach((r, i) => {
+    if (i % step === 0 || i === n - 1) s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${mlabel(r.month, i === 0)}</text>`;
+    if (r[key] == null) return;
+    const tipHtml = `<b>${esc(r.name)}${r.partial ? ' (идёт)' : ''}</b><br>${opts.label}: <b>${opts.pct ? pct(r[key]) : fmt(r[key])}</b>` + (opts.extra ? '<br>' + opts.extra(r) : '');
+    s += `<g class="hov" data-html="${esc(tipHtml)}"><rect x="${x(i) - (W - L) / n / 2}" y="${T}" width="${(W - L) / n}" height="${H - T - B}" fill="transparent"/><circle cx="${x(i)}" cy="${y(r[key])}" r="${i === n - 1 ? 4.5 : 3}" fill="${r.partial ? '#fff' : 'var(--s-renew)'}" stroke="var(--s-renew)" stroke-width="2"/></g>`;
+  });
+  const last = valid[valid.length - 1];
+  if (last) s += `<text x="${last[0] - 8}" y="${last[1] - 10}" text-anchor="end" style="fill:var(--ink);font-weight:600">${opts.pct ? pct(vals[n - 1]) : fmt(vals[n - 1])}</text>`;
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function bindHover(el) {
+  el.querySelectorAll('.hov').forEach(g => {
+    g.addEventListener('mousemove', e => { showTip(g.dataset.html, e); g.style.filter = 'brightness(1.06)'; });
+    g.addEventListener('mouseleave', () => { hideTip(); g.style.filter = ''; });
+  });
+}
+
+/* ---------- отрисовка ---------- */
+function render(D) {
+  const k = D.kpi, M = D.monthly, cur = M[M.length - 1];
+  const full = M.filter(m => !m.partial);
+  const g = D.in_group;
+  const delta = (a, b) => b ? Math.round((a - b) / b * 100) : 0;
+  const revDelta = delta(k.rev_month, k.rev_prev);
+
+  let h = `
+  <div class="eyebrow">Аналитика клуба</div>
+  <h1>Территория <em>Нити Жизни</em></h1>
+  <div class="meta">Данные из GetCourse на ${esc(D.updated)}, обновляются каждые 2 часа · <a href="#" id="logout">Выйти</a></div>
+
+  <div class="kpis">
+    <div class="card kpi hero"><div class="l">Сейчас в клубе ${q('Сколько человек сейчас состоят в группе клуба «Актив.участник ТНЖ». Ниже — у скольких из них по заказам оплачен текущий период.')}</div>
+      <div class="v">${fmt(g ? g.total : k.active)}</div><div class="s">${g ? `оплачен доступ: <b>${fmt(g.paid)}</b>` : ''}<br>всего было ${fmt(k.ever)}</div></div>
+    <div class="card kpi"><div class="l">Выручка за месяц ${q('Все оплаты клуба с 1-го числа текущего месяца: новые, вернувшиеся и продления.')}</div>
+      <div class="v">${rub(k.rev_month)}</div><div class="s">прошлый месяц ${rub(k.rev_prev)}</div></div>
+    <div class="card kpi"><div class="l">Новые за месяц ${q('Первая оплата клуба в жизни + вернувшиеся после перерыва больше недели.')}</div>
+      <div class="v">${fmt(k.new_month)}</div><div class="s">${rub(k.new_month_rub)}</div></div>
+    <div class="card kpi"><div class="l">Продления за месяц ${q('Оплаты тех, кто уже в клубе: автосписания и ручные продления.')}</div>
+      <div class="v">${fmt(k.renew_month)}</div><div class="s">${rub(k.renew_month_rub)}</div></div>
+    <div class="card kpi"><div class="l">Автооплата ${q('Доля участников с оплаченным доступом, у которых последний платёж прошёл автосписанием (продление по привязанной карте).')}</div>
+      <div class="v">${k.autopay_share}%</div><div class="s">${fmt(k.autopay)} человек</div></div>
+    <div class="card kpi"><div class="l">Заканчивается в месяце ${q('У скольких участников оплаченный период заканчивается до конца текущего месяца.')}</div>
+      <div class="v">${fmt(k.expiring_month)}</div><div class="s">прошло ${k.day_of_month} дн. месяца</div></div>
+  </div>`;
+
+  // выручка
+  h += `<h2>Выручка по месяцам</h2><p class="sub">Сколько денег принесли новые участники, вернувшиеся и продления. Текущий месяц — бледнее, он ещё идёт.</p>
+  <div class="card"><div class="chart" id="revChart"></div>
+  <div class="legend"><span><i style="background:var(--s-renew)"></i>Продления</span><span><i style="background:var(--s-new)"></i>Новые участники</span><span><i style="background:var(--s-return)"></i>Вернувшиеся</span></div></div>`;
+
+  // тарифы и окончания
+  const planRow = p => `<tr><td>${esc(p.plan.replace(/ · /g, ' · '))}</td><td>${p.cur[0] ? `${p.cur[0]} · ${rub(p.cur[1])}` : '—'}</td><td>${p.prev[0] ? `${p.prev[0]} · ${rub(p.prev[1])}` : '—'}</td></tr>`;
+  h += `<h2>Тарифы и окончания</h2><p class="sub">Что покупают и у кого скоро заканчивается доступ.</p>
+  <div class="grid2">
+    <div class="card"><h3>Покупки по тарифам ${q('Количество и сумма оплат по каждому тарифу. «Новые» — первая оплата или возвращение после перерыва.')}</h3>
+      <div class="scroll"><table><thead><tr><th>Тариф</th><th>${esc(D.managers.cur_name)}</th><th>${esc(D.managers.prev_name)}</th></tr></thead><tbody>${D.plans.map(planRow).join('')}</tbody></table></div></div>
+    <div class="card"><h3>У кого заканчивается доступ ${q('Среди участников с оплаченным доступом: когда заканчивается оплаченный период. «Без автооплаты» — им нужно напомнить о продлении вручную.')}</h3>
+      ${D.expiring.days.map(d => `<div class="row"><span>${d.days === 1 ? 'в течение суток' : 'в ближайшие ' + d.days + (d.days < 5 ? ' дня' : ' дней')}</span><span class="n">${fmt(d.count)}<small>без автооплаты: ${d.manual}</small></span></div>`).join('')}
+      <div style="height:10px"></div>
+      ${D.expiring.months.map(m => `<div class="row"><span>${esc(m.name)}</span><span class="n">${fmt(m.count)}<small>без автооплаты: ${m.manual}</small></span></div>`).join('')}
+    </div>
+  </div>`;
+
+  // база
+  const b = D.base, a = D.archive;
+  const share = (x, t) => t ? Math.round(x / t * 100) : 0;
+  h += `<h2>База клуба</h2><p class="sub">Сколько людей прошло через клуб и где они сейчас.</p>
+  <div class="grid3">
+    <div class="card"><h3>Сколько остаётся ${q('Все, кто хоть раз оплачивал клуб; сколько из них продлевали хотя бы раз; сколько сейчас с оплаченным доступом.')}</h3>
+      ${[['Были в клубе за всё время', b.ever], ['Продлевали хотя бы раз', b.renewed], ['С оплаченным доступом сейчас', b.active]].map(([l, v]) => `<div class="row"><span>${l}</span><span class="n">${fmt(v)}<small>${share(v, b.ever)}%</small></span></div><div class="bar"><i style="width:${share(v, b.ever)}%"></i></div>`).join('')}
+    </div>
+    <div class="card"><h3>Кто в архиве ${q('Люди, у которых сейчас нет оплаченного доступа: брали пробный доступ, оплачивали или продлевали раньше.')}</h3>
+      <div class="row"><span>Всего в архиве</span><span class="n">${fmt(a.total)}</span></div>
+      <div class="row"><span>Брали пробный доступ и не купили</span><span class="n">${fmt(a.trial_no_buy)}</span></div>
+      <div class="row"><span>Купили один раз и не продлили</span><span class="n">${fmt(a.bought_once)}</span></div>
+      <div class="row"><span>Продлевали, но ушли</span><span class="n">${fmt(a.renewed_left)}</span></div>
+    </div>
+    <div class="card"><h3>Группа клуба в GetCourse ${q('Сверка: кто состоит в группах клуба и есть ли у них оплата. «Без оплат клуба» — добавлены вручную или по бесплатному доступу. «Период закончился» — ждут автосписания или должны быть удалены из группы.')}</h3>
+      ${g ? `<div class="row"><span>В группе сейчас</span><span class="n">${fmt(g.total)}</span></div>
+      <div class="row"><span>Оплачен текущий период</span><span class="n">${fmt(g.paid)}</span></div>
+      <div class="row"><span>Период закончился</span><span class="n">${fmt(g.lapsed)}</span></div>
+      <div class="row"><span>Без оплат клуба</span><span class="n">${fmt(g.no_payments)}</span></div>` : '<p class="note">Нет данных по группам</p>'}
+    </div>
+  </div>`;
+
+  // рост и удержание
+  h += `<h2>Рост и удержание</h2><p class="sub">Посчитано по истории всех заказов клуба. Последний месяц ещё не закончился — его цифры неполные.</p>
+  <div class="grid2">
+    <div class="card"><h3>Участники на конец месяца ${q('Сколько человек с оплаченным доступом было в последний день месяца.')}</h3><div class="chart" id="activeChart"></div></div>
+    <div class="card"><h3>Процент продления ${q('Из тех, у кого в этом месяце закончился оплаченный период, сколько оплатили следующий (в течение недели). Считаются только периоды, по которым уже прошла неделя.')}</h3><div class="chart" id="renewChart"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Пришли и ушли ${q('Новые — первая оплата. Вернулись — оплатили после перерыва. Ушли — оплаченный период закончился и за неделю не продлили. Выручка в месяц — сумма действующих подписок в пересчёте на месяц.')}</h3>
+    <div class="scroll"><table><thead><tr><th>Месяц</th><th>Новые</th><th>Вернулись</th><th>Ушли</th><th>Итог</th><th>В клубе</th><th>Продлили</th><th>Выручка в месяц</th></tr></thead><tbody>
+    ${M.slice().reverse().map(m => `<tr><td>${esc(m.name)}${m.partial ? ' <small style="display:inline;color:var(--muted)">идёт</small>' : ''}</td><td>${m.new}</td><td>${m.returned}</td><td>${m.churned}</td><td class="${m.net >= 0 ? 'pos' : 'neg'}">${m.net > 0 ? '+' : ''}${m.net}</td><td>${fmt(m.active_end)}</td><td>${pct(m.renewal_rate)}</td><td>${rub(m.mrr)}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+
+  // жизнь участника
+  const L = D.ltv, t3 = D.trial.m3, ta = D.trial.all;
+  h += `<h2>Сколько живёт участник</h2>
+  <div class="kpis" style="grid-template-columns:repeat(${ta.started ? 4 : 3},1fr)">
+    <div class="card kpi"><div class="l">LTV участника ${q('Сколько в среднем принёс один участник за всё время в клубе.')}</div><div class="v">${rub(L.avg)}</div><div class="s">медиана ${rub(L.median)}</div></div>
+    <div class="card kpi"><div class="l">Средний срок в клубе ${q('Сколько месяцев оплаченного доступа в среднем набирает участник (сумма всех периодов).')}</div><div class="v">${String(L.avg_months).replace('.', ',')} мес</div><div class="s">медиана ${String(L.median_months).replace('.', ',')} мес · до полугода доживают ${pct(L.share_6m)}</div></div>
+    ${ta.started ? `<div class="card kpi"><div class="l">Пробный доступ → оплата ${q('Какая доля взявших пробный доступ оплатила клуб в течение 30 дней.')}</div><div class="v">${t3.started >= 10 ? pct(t3.conv) : pct(ta.conv)}</div><div class="s">${t3.started >= 10 ? `${t3.paid} из ${t3.started} за 3 мес.` : `${ta.paid} из ${fmt(ta.started)} за всё время`}</div></div>` : ''}
+    <div class="card kpi"><div class="l">Выручка в месяц ${q('Сумма действующих подписок в пересчёте на месяц: 3 месяца за 8 970 ₽ = 2 990 ₽ в месяц. Это «база» клуба без разовых всплесков.')}</div><div class="v">${rub(cur.mrr)}</div><div class="s">от действующих подписок</div></div>
+  </div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card"><h3>Давность у тех, кто в клубе ${q('Сколько времени прошло с первой оплаты клуба у тех, у кого сейчас оплачен доступ.')}</h3>
+      ${D.tenure.map(t => `<div class="row"><span>${t.label}</span><span class="n">${t.count}<small>${pct(t.share)}</small></span></div><div class="bar"><i style="width:${t.share}%"></i></div>`).join('')}</div>
+    <div class="card"><h3>Источники ${q('Откуда пришёл участник — по UTM-метке при регистрации в школе (если её нет — по метке заказа). «Без метки» — пришли до того, как метки стали ставить, или по прямой ссылке.')}</h3>
+      <div class="scroll"><table><thead><tr><th>Источник</th><th>Людей</th><th>Сейчас</th><th>LTV</th><th>Месяцев</th><th>Продлили</th></tr></thead><tbody>
+      ${D.sources.map(s => `<tr><td>${esc(s.source)}</td><td>${s.users}</td><td>${s.active}</td><td>${rub(s.ltv)}</td><td>${String(s.months).replace('.', ',')}</td><td>${s.renewed}%</td></tr>`).join('')}
+      </tbody></table></div></div>
+  </div>`;
+
+  // когорты
+  const maxN = Math.max(...D.cohorts.map(c => c.ret.length), 1);
+  const cell = v => { if (v == null) return '<td></td>'; const a = Math.max(.06, v / 100); return `<td style="background:rgba(61,110,42,${a.toFixed(2)});color:${v > 55 ? '#fff' : 'var(--ink)'}">${v}</td>`; };
+  h += `<div class="card" style="margin-top:16px"><h3>Когорты: доля оставшихся через N месяцев, % ${q('Люди, впервые оплатившие клуб в одном месяце. Цифра — какой процент из них был с оплаченным доступом в конце 1-го, 2-го… месяца после вступления.')}</h3>
+    <div class="scroll"><table class="cohort"><thead><tr><th style="text-align:left">Пришли</th><th style="text-align:left">Людей</th>${Array.from({length: maxN}, (_, i) => `<th>${i + 1}</th>`).join('')}</tr></thead><tbody>
+    ${D.cohorts.map(c => `<tr><td>${esc(c.name)}</td><td>${c.size}</td>${Array.from({length: maxN}, (_, i) => cell(c.ret[i])).join('')}</tr>`).join('')}
+    </tbody></table></div></div>`;
+
+  // менеджеры
+  const mgrTable = rows => rows.length ? `<div class="scroll"><table><thead><tr><th>Менеджер</th><th>Ручное</th><th>Авто</th><th>Итого</th></tr></thead><tbody>
+    ${(() => { const tot = rows.reduce((a, r) => [a[0] + r.manual[0] + r.auto[0], a[1] + r.manual[1] + r.auto[1]], [0, 0]);
+      return `<tr><td><b>Итого</b></td><td></td><td></td><td><b>${tot[0]} · ${rub(tot[1])}</b></td></tr>`; })()}
+    ${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${r.manual[0] ? `${r.manual[0]} · ${rub(r.manual[1])}` : '—'}</td><td>${r.auto[0] ? `${r.auto[0]} · ${rub(r.auto[1])}` : '—'}</td><td>${r.manual[0] + r.auto[0]} · ${rub(r.manual[1] + r.auto[1])}</td></tr>`).join('')}
+    </tbody></table></div>` : '<p class="note">Нет оплат с менеджером</p>';
+  h += `<h2>Продажи по менеджерам</h2><p class="sub">Оплаты клуба, в которых указан менеджер. «Ручное» — первая покупка или оплата по ссылке, «Авто» — автосписание.</p>
+  <div class="card"><div class="tabs" id="mgrTabs"><button class="on" data-k="cur">${esc(D.managers.cur_name)}</button><button data-k="prev">${esc(D.managers.prev_name)}</button></div><div id="mgrBody">${mgrTable(D.managers.cur)}</div></div>`;
+
+  // итоги
+  if (D.insights.items.length) {
+    h += `<h2>Итоги месяца</h2><p class="sub">Итоги за ${esc(D.insights.month)} в сравнении с предыдущим месяцем. Пересчитывается автоматически.</p>
+    <div class="insights">${D.insights.items.map(i => `<div class="card ins ${i.tone}"><div class="tag">${i.tone === 'good' ? '✓ Хорошо' : '! Внимание'}</div><div class="t">${esc(i.title)}</div><p>${esc(i.text)}</p></div>`).join('')}</div>`;
+  }
+
+  $('#root').innerHTML = h;
+
+  stackedBars($('#revChart'), M.slice(-12).map(m => ({...m})), [
+    {key: 'rev_renew', label: 'Продления', color: 'var(--s-renew)'},
+    {key: 'rev_new', label: 'Новые', color: 'var(--s-new)'},
+    {key: 'rev_return', label: 'Вернувшиеся', color: 'var(--s-return)'},
+  ]);
+  lineChart($('#activeChart'), M, 'active_end', {label: 'В клубе', extra: r => `Пришли ${r.new + r.returned}, ушли ${r.churned}`});
+  lineChart($('#renewChart'), M.filter(m => m.renewal_rate != null), 'renewal_rate', {label: 'Продлили', pct: true, max: 100, extra: r => `${r.renewed} из ${r.due}`});
+
+  $('#mgrTabs').addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn) return;
+    $('#mgrTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
+    $('#mgrBody').innerHTML = mgrTable(D.managers[btn.dataset.k]);
+  });
+  $('#logout').addEventListener('click', e => { e.preventDefault(); try { sessionStorage.removeItem('tnj_pw'); } catch (x) {} location.reload(); });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# личные данные и ключи — никогда не публикуются
+raw/
+КЛЮЧ_API.txt
+site/data.plain.json
+site/data.enc.json
+gh_login.log
+__pycache__/
+.DS_Store
+ПАРОЛЬ_САЙТА.txt
+update.log
+ЗАПУСК.command
