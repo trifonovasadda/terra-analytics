@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Аналитика · Территория Нити Жизни</title>
+<style>
+:root{
+  --bg:#F8F3E8; --card:#FFFDF7; --ink:#173D2D; --ink2:#4E6358; --muted:#8A958C;
+  --line:#E6DCC6; --grid:#EEE6D5; --olive:#173D2D; --olive2:#2E5A45;
+  --sand:#B99145; --terra:#B99145; --good:#1E7148; --bad:#B5452F;
+  --s-renew:#1E7148; --s-new:#C8932F; --s-return:#B5452F;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);min-height:100vh}
+.wrap{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+h1{font:400 46px/1.08 var(--serif);margin:0 0 10px;letter-spacing:-.01em}
+h1 em{color:var(--sand);font-style:italic}
+h2{font:400 28px/1.2 var(--serif);margin:48px 0 6px}
+h3{font:600 14px/1.3 var(--sans);margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin-bottom:14px}
+.sub{color:var(--ink2);font-size:13px;margin:0 0 16px}
+.meta{color:var(--ink2);font-size:13px}
+.meta a{color:var(--ink2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:20px;box-shadow:0 1px 2px rgba(23,61,45,.04)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:24px}
+.kpi{padding:16px}
+.kpi .l{font-size:12px;color:var(--ink2);display:flex;justify-content:space-between;gap:6px;min-height:32px}
+.kpi .v{font:600 26px/1.15 var(--sans);white-space:nowrap;margin:6px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink2)}
+.kpi.hero{background:#173D2D;color:#fff;border:0}
+.kpi.hero .l,.kpi.hero .s{color:rgba(255,255,255,.8)}
+.kpi.hero .s b{color:#D9B977;font-weight:600}
+.q{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--grid);color:var(--ink2);font:600 10px/16px var(--sans);justify-content:center;cursor:help;flex:none;position:relative}
+.hero .q{background:rgba(255,255,255,.18);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font:500 12px/1.3 var(--sans);color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;text-align:right;border-bottom:1px solid var(--grid);font-size:14px;vertical-align:top}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+tr:last-child td{border-bottom:0}
+td{white-space:nowrap} td:first-child{white-space:normal}
+td small{display:block;color:var(--muted);font-size:11px}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--grid);gap:12px}
+.row:last-child{border-bottom:0}
+.row .n{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .n small{font-weight:400;color:var(--muted);margin-left:4px}
+.bar{height:6px;border-radius:3px;background:var(--grid);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--olive2);border-radius:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:11px var(--sans);fill:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:#283127;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.tip b{font-weight:600}
+.tip i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.cohort td{text-align:center;font-size:12px;padding:6px 4px;border-bottom:2px solid #fff;border-right:2px solid #fff}
+.cohort td:first-child,.cohort td:nth-child(2){text-align:left;background:none;white-space:nowrap}
+.cohort th{text-align:center}
+.insights{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ins{border-left:3px solid var(--bad);padding:16px 18px}
+.ins.good{border-left-color:var(--good)}
+.ins .tag{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.ins.bad .tag{color:var(--bad)} .ins.good .tag{color:var(--good)}
+.ins .t{font:400 19px/1.3 var(--serif);margin-bottom:6px}
+.ins p{margin:0;color:var(--ink2);font-size:14px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.tabs{display:inline-flex;background:var(--grid);border-radius:2px;padding:3px;margin-bottom:12px}
+.tabs button{border:0;background:none;font:500 13px var(--sans);padding:6px 12px;border-radius:8px;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pbar{position:sticky;top:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:24px -16px 0;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.pbar .tabs{margin:0;flex-wrap:wrap}
+.pbar select,.pbar input{font:13px var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:2px;padding:0 8px;height:32px}
+.pbar .dates{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.plabel{font-size:12px;color:var(--ink2);margin-left:auto}
+.plabel b{color:var(--ink);font-weight:600}
+.nowtag{font:500 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--grid);padding:4px 6px;border-radius:2px}
+/* вход */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+#gate form{width:100%;max-width:360px;text-align:left}
+#gate input{width:100%;font:16px var(--sans);padding:12px 14px;border:1px solid var(--line);border-radius:0;background:#fff;margin:14px 0 12px;outline:none}
+#gate input:focus{border-color:var(--olive2)}
+#gate button{width:100%;font:600 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#fff;border:0;border-radius:0;padding:15px;background:#173D2D;cursor:pointer}
+#gate .err{color:var(--bad);font-size:13px;min-height:18px;margin-top:10px}
+#app{display:none}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.pbar{position:static}.plabel{margin-left:0;width:100%}h1{font-size:34px}.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3,.insights{grid-template-columns:1fr}.kpi .v{font-size:26px}}
+
+.back{display:inline-block;font-size:13px;color:var(--ink2);text-decoration:none;margin-bottom:18px}
+.back:hover{color:var(--ink)}
+
+.menu{max-width:540px;margin:0 auto;padding:14vh 16px 48px}
+.mcard{display:flex;gap:16px;align-items:center;padding:20px 22px;text-decoration:none;color:var(--ink);margin-top:12px;transition:transform .12s,box-shadow .12s}
+.mcard:hover{transform:translateY(-1px);box-shadow:0 2px 4px rgba(40,49,39,.06),0 14px 32px rgba(40,49,39,.08)}
+.mcard .ico{width:44px;height:44px;border-radius:2px;background:var(--grid);color:var(--olive);display:flex;align-items:center;justify-content:center;flex:none}
+.mcard .t{font:400 22px/1.2 var(--serif)}
+.mcard .d{font-size:13px;color:var(--ink2);margin-top:3px}
+.mcard .ar{margin-left:auto;color:var(--muted);font-size:20px}
+.mfoot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:16px}
+.mfoot a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="card" autocomplete="on">
+    <div class="eyebrow">Территория Нити Жизни</div>
+    <h1 style="font-size:32px">Аналитика <em>клуба</em></h1>
+    <div class="meta">Введите пароль, чтобы открыть отчёт</div>
+    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
+    <button type="submit">Войти</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<div id="app"></div>
+<div class="tip" id="tip"></div>
+
+<script>
+
+const DATA_URL = 'data.enc.json';
+const $ = (s, el = document) => el.querySelector(s);
+const nf = new Intl.NumberFormat('ru-RU');
+const fmt = n => nf.format(Math.round(n));
+const rub = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace('.', ',').replace(/,?0+$/, '') + ' млн ₽'
+  : n >= 1e4 ? fmt(n / 1000) + ' тыс ₽' : fmt(n) + ' ₽';
+const pct = n => n == null ? '—' : String(Math.round(n * 10) / 10).replace('.', ',') + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const mlabel = (k, withYear) => { const [y, m] = k.split('-'); return MON[m - 1] + (withYear || m === '01' ? ' ' + y.slice(2) : ''); };
+
+/* ---------- расшифровка ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(pkg, password) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(pkg.salt), iterations: pkg.iter, hash: 'SHA-256'},
+    base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(pkg.iv)}, key, b64(pkg.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function open(password, remember) {
+  const pkg = await fetch(DATA_URL + '?t=' + Date.now(), {cache: 'no-store'}).then(r => r.json());
+  const data = await decrypt(pkg, password);
+  if (remember) try { sessionStorage.setItem('tnj_pw', password); } catch (e) {}
+  $('#gate').style.display = 'none';
+  $('#app').style.display = 'block';
+  render(data);
+}
+$('#gate form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  try { await open($('#pw').value, true); }
+  catch (err) { $('#err').textContent = err.name === 'OperationError' ? 'Неверный пароль' : 'Не удалось загрузить данные'; }
+});
+try { const saved = sessionStorage.getItem('tnj_pw'); if (saved) open(saved, false).catch(() => {}); } catch (e) {}
+
+/* ---------- подсказки ---------- */
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = x + scrollX + 'px'; tip.style.top = y + scrollY + 'px';
+}
+const hideTip = () => tip.style.opacity = 0;
+document.addEventListener('mouseover', e => { const q = e.target.closest('[data-tip]'); if (q) showTip(esc(q.dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mousemove', e => { if (e.target.closest('[data-tip]')) showTip(esc(e.target.closest('[data-tip]').dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mouseout', e => { if (e.target.closest('[data-tip]')) hideTip(); });
+const q = text => `<span class="q" data-tip="${esc(text)}" tabindex="0">?</span>`;
+
+
+const IC_MAIL = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+const IC_CLUB = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.6.2 4.3 1.8 4.8 4.8"/></svg>';
+function render(D) {
+  $('#app').innerHTML = `<div class="menu">
+    <div class="eyebrow">Территория Нити Жизни</div>
+    <h1>Аналитика <em>школы</em></h1>
+    <a class="card mcard" href="mail.html"><span class="ico">${IC_MAIL}</span><span><div class="t">Аналитика по рассылкам</div><div class="d">Письма и сообщения: доставка, открытия, переходы, отписки, оплаты</div></span><span class="ar">›</span></a>
+    <a class="card mcard" href="club.html"><span class="ico">${IC_CLUB}</span><span><div class="t">Аналитика по клубу</div><div class="d">Участники, выручка, продления, удержание</div></span><span class="ar">›</span></a>
+    <div class="mfoot"><span>Данные из GetCourse на ${esc(D.updated)}</span><a href="#" id="logout">Выйти</a></div>
+  </div>`;
+  $('#logout').addEventListener('click', e => { e.preventDefault(); try { sessionStorage.removeItem('tnj_pw'); } catch (x) {} location.reload(); });
+}
+</script>
+</body>
+</html>

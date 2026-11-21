@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Аналитика Территории Нити Жизни</title>
+<style>
+.back{display:inline-block;font-size:13px;color:var(--ink2);text-decoration:none;margin-bottom:18px}
+.back:hover{color:var(--ink)}
+
+:root{
+  --bg:#F8F3E8; --card:#FFFDF7; --ink:#173D2D; --ink2:#4E6358; --muted:#8A958C;
+  --line:#E6DCC6; --grid:#EEE6D5; --olive:#173D2D; --olive2:#2E5A45;
+  --sand:#B99145; --terra:#B99145; --good:#1E7148; --bad:#B5452F;
+  --s-renew:#1E7148; --s-new:#C8932F; --s-return:#B5452F;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);min-height:100vh}
+.wrap{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+h1{font:400 46px/1.08 var(--serif);margin:0 0 10px;letter-spacing:-.01em}
+h1 em{color:var(--sand);font-style:italic}
+h2{font:400 28px/1.2 var(--serif);margin:48px 0 6px}
+h3{font:600 14px/1.3 var(--sans);margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin-bottom:14px}
+.sub{color:var(--ink2);font-size:13px;margin:0 0 16px}
+.meta{color:var(--ink2);font-size:13px}
+.meta a{color:var(--ink2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:20px;box-shadow:0 1px 2px rgba(23,61,45,.04)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:24px}
+.kpi{padding:16px}
+.kpi .l{font-size:12px;color:var(--ink2);display:flex;justify-content:space-between;gap:6px;min-height:32px}
+.kpi .v{font:600 26px/1.15 var(--sans);white-space:nowrap;overflow:hidden;margin:6px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink2)}
+.kpi.hero{background:#173D2D;color:#fff;border:0}
+.kpi.hero .l,.kpi.hero .s{color:rgba(255,255,255,.8)}
+.kpi.hero .s b{color:#D9B977;font-weight:600}
+.q{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--grid);color:var(--ink2);font:600 10px/16px var(--sans);justify-content:center;cursor:help;flex:none;position:relative}
+.hero .q{background:rgba(255,255,255,.18);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font:500 12px/1.3 var(--sans);color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;text-align:right;border-bottom:1px solid var(--grid);font-size:14px;vertical-align:top}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+tr:last-child td{border-bottom:0}
+td{white-space:nowrap} td:first-child{white-space:normal}
+td small{display:block;color:var(--muted);font-size:11px}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--grid);gap:12px}
+.row:last-child{border-bottom:0}
+.row .n{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .n small{font-weight:400;color:var(--muted);margin-left:4px}
+.bar{height:6px;border-radius:3px;background:var(--grid);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--olive2);border-radius:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:11px var(--sans);fill:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:#283127;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.tip b{font-weight:600}
+.tip i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.cohort td{text-align:center;font-size:12px;padding:6px 4px;border-bottom:2px solid #fff;border-right:2px solid #fff}
+.cohort td:first-child,.cohort td:nth-child(2){text-align:left;background:none;white-space:nowrap}
+.cohort th{text-align:center}
+.insights{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ins{border-left:3px solid var(--bad);padding:16px 18px}
+.ins.good{border-left-color:var(--good)}
+.ins .tag{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.ins.bad .tag{color:var(--bad)} .ins.good .tag{color:var(--good)}
+.ins .t{font:400 19px/1.3 var(--serif);margin-bottom:6px}
+.ins p{margin:0;color:var(--ink2);font-size:14px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.tabs{display:inline-flex;background:var(--grid);border-radius:2px;padding:3px;margin-bottom:12px}
+.tabs button{border:0;background:none;font:500 13px var(--sans);padding:6px 12px;border-radius:8px;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pbar{position:sticky;top:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:24px -16px 0;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.pbar .tabs{margin:0;flex-wrap:wrap}
+.pbar select,.pbar input{font:13px var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:2px;padding:0 8px;height:32px}
+.pbar .dates{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.plabel{font-size:12px;color:var(--ink2);margin-left:auto}
+.plabel b{color:var(--ink);font-weight:600}
+.nowtag{font:500 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--grid);padding:4px 6px;border-radius:2px}
+.sum{text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:currentColor;cursor:help}
+/* вход */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+#gate form{width:100%;max-width:360px;text-align:left}
+#gate input{width:100%;font:16px var(--sans);padding:12px 14px;border:1px solid var(--line);border-radius:0;background:#fff;margin:14px 0 12px;outline:none}
+#gate input:focus{border-color:var(--olive2)}
+#gate button{width:100%;font:600 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#fff;border:0;border-radius:0;padding:15px;background:#173D2D;cursor:pointer}
+#gate .err{color:var(--bad);font-size:13px;min-height:18px;margin-top:10px}
+#app{display:none}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.pbar{position:static}.plabel{margin-left:0;width:100%}h1{font-size:34px}.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3,.insights{grid-template-columns:1fr}.kpi .v{font-size:26px}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="card" autocomplete="on">
+    <div class="eyebrow">Территория Нити Жизни</div>
+    <h1 style="font-size:32px">Аналитика <em>клуба</em></h1>
+    <div class="meta">Введите пароль, чтобы открыть отчёт</div>
+    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
+    <button type="submit">Войти</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<div id="app"><div class="wrap" id="root"></div></div>
+<div class="tip" id="tip"></div>
+
+<script>
+const DATA_URL = 'data.enc.json';
+const $ = (s, el = document) => el.querySelector(s);
+const nf = new Intl.NumberFormat('ru-RU');
+const fmt = n => nf.format(Math.round(n));
+// суммы: коротко («1,33 млн ₽»), при наведении — целиком, с копейками
+const nf2 = new Intl.NumberFormat('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const rubFull = n => { const v = Math.round(n * 100) / 100; return (Number.isInteger(v) ? nf.format(v) : nf2.format(v)) + ' ₽'; };
+const rubShort = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace('.', ',').replace(/,?0+$/, '') + ' млн ₽'
+  : n >= 1e4 ? fmt(n / 1000) + ' тыс ₽' : fmt(n) + ' ₽';
+const rub = n => { const s = rubShort(n), f = rubFull(n); return s === f ? s : `<span class="sum" data-tip="${f}">${s}</span>`; };
+const pct = n => n == null ? '—' : String(Math.round(n * 10) / 10).replace('.', ',') + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const mlabel = (k, withYear) => { const [y, m] = k.split('-'); return MON[m - 1] + (withYear || m === '01' ? ' ' + y.slice(2) : ''); };
+
+/* ---------- расшифровка ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(pkg, password) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(pkg.salt), iterations: pkg.iter, hash: 'SHA-256'},
+    base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(pkg.iv)}, key, b64(pkg.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function open(password, remember) {
+  const pkg = await fetch(DATA_URL + '?t=' + Date.now(), {cache: 'no-store'}).then(r => r.json());
+  const data = await decrypt(pkg, password);
+  if (remember) try { sessionStorage.setItem('tnj_pw', password); } catch (e) {}
+  $('#gate').style.display = 'none';
+  $('#app').style.display = 'block';
+  render(data);
+}
+$('#gate form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  try { await open($('#pw').value, true); }
+  catch (err) { $('#err').textContent = err.name === 'OperationError' ? 'Неверный пароль' : 'Не удалось загрузить данные'; }
+});
+try { const saved = sessionStorage.getItem('tnj_pw'); if (saved) open(saved, false).catch(() => {}); } catch (e) {}
+
+/* ---------- подсказки ---------- */
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = x + scrollX + 'px'; tip.style.top = y + scrollY + 'px';
+}
+const hideTip = () => tip.style.opacity = 0;
+document.addEventListener('mouseover', e => { const q = e.target.closest('[data-tip]'); if (q) showTip(esc(q.dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mousemove', e => { if (e.target.closest('[data-tip]')) showTip(esc(e.target.closest('[data-tip]').dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mouseout', e => { if (e.target.closest('[data-tip]')) hideTip(); });
+const q = text => `<span class="q" data-tip="${esc(text)}" tabindex="0">?</span>`;
+// длинная сумма целиком: уменьшаем шрифт числа в карточке, пока оно помещается
+function fitKpis() {
+  document.querySelectorAll('.kpi .v').forEach(v => {
+    v.style.fontSize = '';
+    let size = parseFloat(getComputedStyle(v).fontSize);
+    while (v.scrollWidth > v.clientWidth && size > 13) { size -= 1; v.style.fontSize = size + 'px'; }
+  });
+}
+new MutationObserver(() => requestAnimationFrame(fitKpis)).observe(document.body, {childList: true, subtree: true});
+addEventListener('resize', fitKpis);
+
+/* ---------- даты и период ---------- */
+const MONF = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+const addDays = (s, n) => new Date(Date.parse(s + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+const daysBetween = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5);
+const monthLast = s => new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7), 0)).toISOString().slice(0, 10);
+const shiftMonth = (s, n) => {  // тот же день n месяцев назад/вперёд; 31-е → последний день месяца
+  const first = new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1 + n, 1)).toISOString().slice(0, 10);
+  const last = monthLast(first), d = first.slice(0, 8) + s.slice(8);
+  return s === monthLast(s) || d > last ? last : d;
+};
+const dayLabel = (s, withYear) => `${+s.slice(8)} ${MON[+s.slice(5, 7) - 1]}` + (withYear ? ' ' + s.slice(0, 4) : '');
+function rangeLabel(a, b) {
+  if (a === b) return dayLabel(a, true);
+  if (a.slice(8) === '01' && b === monthLast(a)) return MONF[+a.slice(5, 7) - 1] + ' ' + a.slice(0, 4);
+  return dayLabel(a, a.slice(0, 4) !== b.slice(0, 4)) + ' – ' + dayLabel(b, true);
+}
+
+let D, KEYS, TODAY, ALLM;
+const P = {a: '', b: '', key: 'month'};
+const SUMS = ['new', 'returned', 'renew', 'rev_new', 'rev_return', 'rev_renew', 'due', 'due_auto', 'renewed', 'open', 'due_m', 'renewed_m', 'churned'];
+
+// всё, что складывается за период a..b (включительно); срез «в клубе» — на конец периода, но не позже сегодня
+function agg(a, b) {
+  const r = {plans: {}, mgr: {}};
+  SUMS.forEach(f => r[f] = 0);
+  for (const k of KEYS) {
+    if (k < a) continue;
+    if (k > b) break;
+    const d = D.days[k];
+    SUMS.forEach(f => r[f] += d[f] || 0);
+    for (const [p, v] of Object.entries(d.plans)) { const x = r.plans[p] || (r.plans[p] = [0, 0]); x[0] += v[0]; x[1] += v[1]; }
+    for (const [m, v] of Object.entries(d.mgr)) { const x = r.mgr[m] || (r.mgr[m] = [0, 0, 0, 0]); v.forEach((n, i) => x[i] += n); }
+  }
+  const s = D.days[b < TODAY ? b : TODAY] || {};
+  r.active_end = s.active || 0; r.auto = s.auto || 0; r.mrr = s.mrr || 0;
+  r.rev = r.rev_new + r.rev_return + r.rev_renew;
+  r.net = r.new + r.returned - r.churned;
+  r.renewal_rate = r.due_m ? Math.round(r.renewed_m / r.due_m * 1000) / 10 : null;
+  return r;
+}
+
+// разбивка периода на столбики: до 2 месяцев — по дням, дольше — по месяцам
+function buckets(a, b, byMonth) {
+  const out = [];
+  if (!byMonth && daysBetween(a, b) < 62) {
+    for (let d = a; d <= b; d = addDays(d, 1))
+      out.push({...agg(d, d), a: d, b: d, name: dayLabel(d, true), label: String(+d.slice(8)), partial: false});
+    return out;
+  }
+  for (let s = a; s <= b;) {
+    const last = monthLast(s), e = last < b ? last : b;
+    out.push({...agg(s, e), a: s, b: e, month: s.slice(0, 7), name: rangeLabel(s, e), label: mlabel(s.slice(0, 7), !out.length), partial: s <= TODAY && TODAY < last});
+    s = addDays(last, 1);
+  }
+  return out;
+}
+
+// с чем сравниваем: для периода с 1-го числа — те же дни месяцем(ами) раньше, иначе — столько же дней перед ним
+function prevRange(a, e) {
+  if (a.slice(8) === '01') {
+    const n = (+e.slice(0, 4) - +a.slice(0, 4)) * 12 + (+e.slice(5, 7) - +a.slice(5, 7)) + 1;
+    return [shiftMonth(a, -n), shiftMonth(e, -n)];
+  }
+  const len = daysBetween(a, e);
+  return [addDays(a, -len - 1), addDays(a, -1)];
+}
+
+function presets() {
+  const m1 = TODAY.slice(0, 8) + '01', pm = shiftMonth(m1, -1);
+  return {
+    month: ['Этот месяц', m1, monthLast(TODAY)],
+    prev: ['Прошлый месяц', pm, monthLast(pm)],
+    m3: ['3 месяца', addDays(shiftMonth(TODAY, -3), 1), TODAY],
+    year: ['С начала года', TODAY.slice(0, 4) + '-01-01', TODAY],
+    all: ['Всё время', D.first, TODAY],
+  };
+}
+
+function setPeriod(a, b, key) {
+  if (a > b) [a, b] = [b, a];
+  const maxB = monthLast(TODAY);
+  P.a = a < D.first ? D.first : a > TODAY ? TODAY : a;
+  P.b = b > maxB ? maxB : b < P.a ? P.a : b;
+  P.key = key;
+  const bar = $('#pbar');
+  bar.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x.dataset.k === key));
+  $('#pMonth').value = key === 'm' ? P.a.slice(0, 7) : '';
+  $('#pFrom').value = P.a; $('#pTo').value = P.b;
+  try { sessionStorage.setItem('tnj_period', JSON.stringify(P)); } catch (e) {}
+  draw();
+}
+
+/* ---------- графики (SVG) ---------- */
+function niceMax(v) { if (!(v > 0)) return 4; const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v / p / 2) * p * 2; }
+function axisFmt(v, money) { return money ? (v >= 1e6 ? (v / 1e6).toString().replace('.', ',') + ' млн' : v >= 1e3 ? fmt(v / 1e3) + ' тыс' : v) : (v >= 1e3 ? (v / 1e3).toString().replace('.', ',') + ' тыс' : v); }
+const labelStep = n => Math.max(1, Math.ceil(n / 16));
+
+function stackedBars(el, rows, series) {
+  const W = 1000, H = 300, L = 56, B = 28, T = 10;
+  const max = niceMax(Math.max(0, ...rows.map(r => series.reduce((s, x) => s + r[x.key], 0))));
+  const n = rows.length, slot = (W - L) / n, bw = Math.min(56, slot * .62), step = labelStep(n);
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${axisFmt(v, true)}</text>`; }
+  rows.forEach((r, i) => {
+    const x = L + slot * i + (slot - bw) / 2; let acc = 0;
+    const tipHtml = `<b>${esc(r.name)}${r.partial ? ' (идёт)' : ''}</b><br>` + series.map(sr => `<i style="background:${sr.color}"></i>${sr.label}: ${rubFull(r[sr.key])}`).join('<br>') + `<br>Всего: <b>${rubFull(series.reduce((a, sr) => a + r[sr.key], 0))}</b>`;
+    s += `<g class="hov" data-html="${esc(tipHtml)}" opacity="${r.partial ? .55 : 1}">`;
+    s += `<rect x="${L + slot * i}" y="${T}" width="${slot}" height="${H - T - B}" fill="transparent"/>`;
+    const visible = series.filter(sr => r[sr.key] > 0);
+    visible.forEach((sr, j) => {
+      const v = r[sr.key]; const y0 = y(acc), y1 = y(acc + v); acc += v;
+      const h = Math.max(0, y0 - y1 - (j ? 2 : 0)); const top = j === visible.length - 1;
+      s += top && h > 4 ? `<path d="M${x},${y1 + h} v${-(h - 4)} q0,-4 4,-4 h${bw - 8} q4,0 4,4 v${h - 4} z" fill="${sr.color}"/>`
+        : `<rect x="${x}" y="${y1}" width="${bw}" height="${h}" fill="${sr.color}"/>`;
+    });
+    s += `</g>`;
+    if (i % step === 0) s += `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(r.label)}</text>`;
+  });
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function lineChart(el, rows, key, opts = {}) {
+  rows = rows.filter(r => r[key] != null);
+  if (!rows.length) { el.innerHTML = '<p class="note">За выбранный период данных пока нет.</p>'; return; }
+  const W = 520, H = 250, L = 40, B = 26, T = 14;
+  const vals = rows.map(r => r[key]);
+  const max = opts.max || niceMax(Math.max(...vals));
+  const n = rows.length, x = i => L + (W - L - 12) * (n === 1 ? .5 : i / (n - 1));
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${opts.pct ? v + '%' : axisFmt(v)}</text>`; }
+  const pts = rows.map((r, i) => [x(i), y(r[key])]);
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('');
+  const area = `M${pts[0][0]},${y(0)}` + pts.map(p => `L${p[0]},${p[1]}`).join('') + `L${pts[n - 1][0]},${y(0)}Z`;
+  s += `<path d="${area}" fill="var(--olive2)" opacity=".08"/><path d="${d}" fill="none" stroke="var(--s-renew)" stroke-width="2" stroke-linejoin="round"/>`;
+  const step = Math.ceil(n / 8);
+  rows.forEach((r, i) => {
+    if (i % step === 0 || i === n - 1) s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${esc(r.label)}</text>`;
+    const tipHtml = `<b>${esc(r.name)}${r.partial ? ' (идёт)' : ''}</b><br>${opts.label}: <b>${opts.pct ? pct(r[key]) : fmt(r[key])}</b>` + (opts.extra ? '<br>' + opts.extra(r) : '');
+    s += `<g class="hov" data-html="${esc(tipHtml)}"><rect x="${x(i) - (W - L) / n / 2}" y="${T}" width="${(W - L) / n}" height="${H - T - B}" fill="transparent"/><circle cx="${x(i)}" cy="${y(r[key])}" r="${i === n - 1 ? 4.5 : n > 40 ? 2 : 3}" fill="${r.partial ? '#fff' : 'var(--s-renew)'}" stroke="var(--s-renew)" stroke-width="2"/></g>`;
+  });
+  const last = pts[n - 1];
+  s += `<text x="${last[0] - 8}" y="${last[1] - 10}" text-anchor="end" style="fill:var(--ink);font-weight:600">${opts.pct ? pct(vals[n - 1]) : fmt(vals[n - 1])}</text>`;
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+// окончания доступа по дням (или месяцам): продлили / не продлили / ещё могут продлить
+function dailyBars(el, rows) {
+  const W = 1000, H = 260, L = 40, B = 30, T = 12;
+  const max = niceMax(Math.max(5, ...rows.map(d => d.due)));
+  const n = rows.length, slot = (W - L) / n, bw = Math.max(4, Math.min(22, slot * .64)), step = labelStep(n);
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${Math.round(v)}</text>`; }
+  rows.forEach((d, i) => {
+    const x = L + slot * i + (slot - bw) / 2, isToday = d.a === TODAY && d.b === TODAY, future = d.a > TODAY;
+    const lost = d.due - d.renewed - d.open;
+    const segs = [[d.renewed, 'var(--s-renew)'], [lost, 'var(--s-return)'], [d.open, 'var(--grid)']].filter(sg => sg[0] > 0);
+    const tipHtml = `<b>${esc(d.name)}${isToday ? ' (сегодня)' : ''}</b><br>Заканчивается доступ: <b>${d.due}</b> (с автопродлением ${d.due_auto})<br><i style="background:var(--s-renew)"></i>Уже продлили: ${d.renewed}` +
+      (lost > 0 ? `<br><i style="background:var(--s-return)"></i>Не продлили: ${lost}` : '') +
+      (d.open > 0 ? `<br><i style="background:var(--grid)"></i>${future || isToday ? 'Ещё ожидается' : 'Пока не продлили (есть неделя)'}: ${d.open}` : '') +
+      (d.a <= TODAY ? `<br>Оплат продления: ${d.renew}` : '');
+    s += `<g class="hov" data-html="${esc(tipHtml)}"><rect x="${L + slot * i}" y="${T}" width="${slot}" height="${H - T - B}" fill="transparent"/>`;
+    let acc = 0;
+    segs.forEach(([v, c], j) => {
+      const y0 = y(acc), y1 = y(acc + v); acc += v; const h = Math.max(0, y0 - y1 - (j ? 2 : 0));
+      s += j === segs.length - 1 && h > 3 ? `<path d="M${x},${y1 + h} v${-(h - 3)} q0,-3 3,-3 h${bw - 6} q3,0 3,3 v${h - 3} z" fill="${c}"/>` : `<rect x="${x}" y="${y1}" width="${bw}" height="${h}" fill="${c}"/>`;
+    });
+    s += `</g>`;
+    if (i % step === 0 || isToday) s += `<text x="${x + bw / 2}" y="${H - 10}" text-anchor="middle" style="${isToday ? 'fill:var(--ink);font-weight:600' : ''}">${esc(d.label)}</text>`;
+    if (isToday) s += `<line x1="${L + slot * i}" x2="${L + slot * i}" y1="${T}" y2="${H - B}" stroke="var(--ink)" stroke-dasharray="3 3" opacity=".35"/>`;
+  });
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function bindHover(el) {
+  el.querySelectorAll('.hov').forEach(g => {
+    g.addEventListener('mousemove', e => { showTip(g.dataset.html, e); g.style.filter = 'brightness(1.06)'; });
+    g.addEventListener('mouseleave', () => { hideTip(); g.style.filter = ''; });
+  });
+}
+
+/* ---------- отрисовка ---------- */
+function render(data) {
+  D = data; TODAY = D.today;
+  KEYS = Object.keys(D.days).sort();
+  ALLM = buckets(D.first.slice(0, 8) + '01', TODAY, true);
+  const pr = presets(), months = ALLM.map(m => m.month).reverse();
+  $('#root').innerHTML = `
+  <a class="back" href="./">← Меню</a>
+  <div class="eyebrow">Аналитика клуба</div>
+  <h1>Территория <em>Нити Жизни</em></h1>
+  <div class="meta">Данные из GetCourse на ${esc(D.updated)}, обновляются каждые 2 часа · <a href="#" id="logout">Выйти</a></div>
+  <div class="pbar" id="pbar">
+    <div class="tabs">${Object.entries(pr).map(([k, v]) => `<button data-k="${k}">${v[0]}</button>`).join('')}</div>
+    <select id="pMonth" aria-label="Месяц"><option value="">Месяц…</option>${months.map(m => `<option value="${m}">${MONF[+m.slice(5) - 1]} ${m.slice(0, 4)}</option>`).join('')}</select>
+    <span class="dates"><input type="date" id="pFrom" min="${D.first}" max="${TODAY}" aria-label="С"> – <input type="date" id="pTo" min="${D.first}" max="${monthLast(TODAY)}" aria-label="По"></span>
+    <span class="plabel" id="plabel"></span>
+  </div>
+  <div id="content"></div>`;
+
+  const bar = $('#pbar');
+  bar.querySelector('.tabs').addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn) return;
+    const [, a, b] = presets()[btn.dataset.k]; setPeriod(a, b, btn.dataset.k);
+  });
+  $('#pMonth').addEventListener('change', e => { const m = e.target.value; if (m) setPeriod(m + '-01', monthLast(m + '-01'), 'm'); });
+  const fromInputs = () => { if ($('#pFrom').value && $('#pTo').value) setPeriod($('#pFrom').value, $('#pTo').value, ''); };
+  $('#pFrom').addEventListener('change', fromInputs);
+  $('#pTo').addEventListener('change', fromInputs);
+  $('#logout').addEventListener('click', e => { e.preventDefault(); try { sessionStorage.removeItem('tnj_pw'); sessionStorage.removeItem('tnj_period'); } catch (x) {} location.href = './'; });
+
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem('tnj_period')); } catch (e) {}
+  if (saved && saved.key && pr[saved.key]) setPeriod(pr[saved.key][1], pr[saved.key][2], saved.key);
+  else if (saved && saved.a) setPeriod(saved.a, saved.b, saved.key);
+  else setPeriod(pr.month[1], pr.month[2], 'month');
+}
+
+function draw() {
+  const a = P.a, b = P.b, e = b < TODAY ? b : TODAY;  // e — конец периода, но не позже сегодня
+  const isNow = b >= TODAY;
+  const A = agg(a, b), [pa, pb] = prevRange(a, e), Q = agg(pa, pb);
+  const lbl = rangeLabel(a, b), plbl = rangeLabel(pa, pb), noPrev = pb < D.first;
+  $('#plabel').innerHTML = `<b>${esc(lbl)}</b> · сравнение: ${noPrev ? 'нет данных' : esc(plbl)}`;
+  const g = D.in_group;
+  const inP = m => m[0] >= a && m[0] <= e;
+  const ever = D.members.filter(m => m[0] <= e).length;
+  const prevTxt = v => noPrev ? 'раньше данных нет' : `${esc(plbl)}: ${v}`;
+  const nowTag = `<span class="nowtag">на сегодня</span>`;
+
+  let h = `
+  <div class="kpis">
+    <div class="card kpi hero"><div class="l">${isNow ? 'Сейчас в клубе' : 'В клубе на ' + dayLabel(e)} ${q(isNow ? 'Сколько человек сейчас состоят в группе клуба «Актив.участник ТНЖ». Ниже — у скольких из них по заказам оплачен текущий период.' : 'Сколько человек было с оплаченным доступом в последний день периода (по заказам).')}</div>
+      <div class="v">${fmt(isNow && g ? g.total : A.active_end)}</div><div class="s">${isNow && g ? `оплачен доступ: <b>${fmt(g.paid)}</b><br>` : ''}всего было ${fmt(ever)}</div></div>
+    <div class="card kpi"><div class="l">Выручка за период ${q('Все оплаты клуба за выбранный период: новые, вернувшиеся и продления. Ниже — тот же отрезок в прошлом месяце (или столько же дней перед периодом).')}</div>
+      <div class="v">${rub(A.rev)}</div><div class="s">${prevTxt(rub(Q.rev))}</div></div>
+    <div class="card kpi"><div class="l">Новые за период ${q('Первая оплата клуба в жизни + вернувшиеся после перерыва больше недели.')}</div>
+      <div class="v">${fmt(A.new + A.returned)}</div><div class="s">${rub(A.rev_new + A.rev_return)} · вернулись ${A.returned}</div></div>
+    <div class="card kpi"><div class="l">Продления за период ${q('Оплаты тех, кто уже в клубе: автосписания и ручные продления.')}</div>
+      <div class="v">${fmt(A.renew)}</div><div class="s">${rub(A.rev_renew)}</div></div>
+    <div class="card kpi"><div class="l">Автооплата ${q('Доля участников с оплаченным доступом, у которых последний платёж прошёл автосписанием (продление по привязанной карте). На конец периода.')}</div>
+      <div class="v">${A.active_end ? Math.round(A.auto / A.active_end * 100) : 0}%</div><div class="s">${fmt(A.auto)} человек</div></div>
+    <div class="card kpi"><div class="l">Заканчивается в периоде ${q('У скольких оплаченных периодов дата окончания попадает в выбранный период. Ниже — сколько из них уже продлили.')}</div>
+      <div class="v">${fmt(A.due)}</div><div class="s">продлили ${fmt(A.renewed)}</div></div>
+  </div>`;
+
+  // выручка
+  const rows = buckets(a, e), byDay = rows.length && rows[0].a === rows[0].b;
+  h += `<h2>Выручка ${byDay ? 'по дням' : 'по месяцам'}</h2><p class="sub">Сколько денег принесли новые участники, вернувшиеся и продления. ${byDay ? '' : 'Текущий месяц — бледнее, он ещё идёт.'}</p>
+  <div class="card"><div class="chart" id="revChart"></div>
+  <div class="legend"><span><i style="background:var(--s-renew)"></i>Продления</span><span><i style="background:var(--s-new)"></i>Новые участники</span><span><i style="background:var(--s-return)"></i>Вернувшиеся</span></div></div>`;
+
+  // продления по дням
+  const dueRows = buckets(a, b), dueByDay = dueRows[0].a === dueRows[0].b;
+  const full = ALLM.filter(m => !m.partial && m.renewal_rate != null).slice(-3);
+  const rate = full.length ? full.reduce((s, m) => s + m.renewal_rate, 0) / full.length / 100 : 0.85;
+  const lost = A.due - A.renewed - A.open;
+  h += `<h2>Продления ${dueByDay ? 'по дням' : 'по месяцам'}</h2><p class="sub">У скольких участников в каждый ${dueByDay ? 'день' : 'месяц'} заканчивается оплаченный доступ и сколько из них продлили. Автопродление списывает деньги в день окончания доступа, поэтому заказов в день столько, у скольких людей заканчивается доступ.</p>
+  <div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-top:0">
+    <div class="card kpi"><div class="l">Продлений за период ${q('Оплаты продления (автосписания и ручные) за выбранный период.')}</div><div class="v">${fmt(A.renew)}</div><div class="s">${prevTxt(fmt(Q.renew))}</div></div>` +
+    (isNow ? `
+    <div class="card kpi"><div class="l">Ещё ожидается ${q('У скольких участников доступ заканчивается в выбранном периоде и они ещё не продлили (неделя на продление ещё не прошла).')}</div><div class="v">${fmt(A.open)}</div><div class="s">окончаний доступа до конца периода</div></div>
+    <div class="card kpi"><div class="l">Прогноз на период ${q('Уже оплаченные продления + ожидаемые окончания × средний процент продления за последние 3 полных месяца.')}</div><div class="v">≈ ${fmt(A.renew + A.open * rate)}</div><div class="s">при продлении ${pct(Math.round(rate * 1000) / 10)}</div></div>`
+    : `
+    <div class="card kpi"><div class="l">Не продлили ${q('Доступ закончился в выбранном периоде, и за неделю после окончания оплаты не было.')}</div><div class="v">${fmt(lost)}</div><div class="s">${A.open ? `ещё могут продлить: ${fmt(A.open)}` : `из ${fmt(A.due)} окончаний`}</div></div>
+    <div class="card kpi"><div class="l">Процент продления ${q('Из тех, у кого в периоде закончился оплаченный период и уже прошла неделя, сколько оплатили следующий.')}</div><div class="v">${pct(A.renewal_rate)}</div><div class="s">${fmt(A.renewed_m)} из ${fmt(A.due_m)}</div></div>`) + `
+  </div>
+  <div class="card" style="margin-top:12px"><div class="chart" id="dailyChart"></div>
+  <div class="legend"><span><i style="background:var(--s-renew)"></i>Продлили</span><span><i style="background:var(--s-return)"></i>Не продлили</span><span><i style="background:var(--grid);border:1px solid var(--line)"></i>Ещё ожидается</span>${isNow && dueByDay ? '<span style="margin-left:auto">пунктир — сегодня</span>' : ''}</div></div>`;
+
+  // тарифы и окончания
+  const cell2 = v => v && v[0] ? `${v[0]} · ${rub(v[1])}` : '—';
+  const planKeys = D.plan_keys.filter(p => A.plans[p] || Q.plans[p]);
+  h += `<h2>Тарифы и окончания</h2><p class="sub">Что покупают и у кого скоро заканчивается доступ.</p>
+  <div class="grid2">
+    <div class="card"><h3>Покупки по тарифам ${q('Количество и сумма оплат по каждому тарифу. «Новые» — первая оплата или возвращение после перерыва.')}</h3>
+      ${planKeys.length ? `<div class="scroll"><table><thead><tr><th>Тариф</th><th>${esc(lbl)}</th><th>${noPrev ? '—' : esc(plbl)}</th></tr></thead><tbody>${planKeys.map(p => `<tr><td>${esc(p)}</td><td>${cell2(A.plans[p])}</td><td>${cell2(Q.plans[p])}</td></tr>`).join('')}</tbody></table></div>` : '<p class="note">Нет оплат за период</p>'}</div>
+    <div class="card"><h3>У кого заканчивается доступ ${nowTag} ${q('Среди участников с оплаченным доступом: когда заканчивается оплаченный период. «Без автооплаты» — им нужно напомнить о продлении вручную. Считается от сегодняшнего дня и от выбранного периода не зависит.')}</h3>
+      ${D.expiring.days.map(d => `<div class="row"><span>${d.days === 1 ? 'в течение суток' : 'в ближайшие ' + d.days + (d.days < 5 ? ' дня' : ' дней')}</span><span class="n">${fmt(d.count)}<small>без автооплаты: ${d.manual}</small></span></div>`).join('')}
+      <div style="height:10px"></div>
+      ${D.expiring.months.map(m => `<div class="row"><span>${esc(m.name)}</span><span class="n">${fmt(m.count)}<small>без автооплаты: ${m.manual}</small></span></div>`).join('')}
+    </div>
+  </div>`;
+
+  // база
+  const came = D.members.filter(inP), ar = D.archive;
+  const base = [['Впервые оплатили клуб', came.length], ['Продлевали хотя бы раз', came.filter(m => m[3] > 1).length], ['С оплаченным доступом сейчас', came.filter(m => m[4]).length]];
+  const share = (x, t) => t ? Math.round(x / t * 100) : 0;
+  h += `<h2>База клуба</h2><p class="sub">Сколько людей прошло через клуб и где они сейчас.</p>
+  <div class="grid3">
+    <div class="card"><h3>Сколько остаётся ${q('Кто впервые оплатил клуб в выбранный период; сколько из них потом продлевали хотя бы раз; у скольких из них доступ оплачен сейчас.')}</h3>
+      ${base.map(([l, v]) => `<div class="row"><span>${l}</span><span class="n">${fmt(v)}<small>${share(v, came.length)}%</small></span></div><div class="bar"><i style="width:${share(v, came.length)}%"></i></div>`).join('')}
+    </div>
+    <div class="card"><h3>Кто в архиве ${nowTag} ${q('Люди, у которых сейчас нет оплаченного доступа: брали пробный доступ, оплачивали или продлевали раньше.')}</h3>
+      <div class="row"><span>Всего в архиве</span><span class="n">${fmt(ar.total)}</span></div>
+      <div class="row"><span>Брали пробный доступ и не купили</span><span class="n">${fmt(ar.trial_no_buy)}</span></div>
+      <div class="row"><span>Купили один раз и не продлили</span><span class="n">${fmt(ar.bought_once)}</span></div>
+      <div class="row"><span>Продлевали, но ушли</span><span class="n">${fmt(ar.renewed_left)}</span></div>
+    </div>
+    <div class="card"><h3>Группа клуба в GetCourse ${nowTag} ${q('Сверка: кто состоит в группах клуба и есть ли у них оплата. «Без оплат клуба» — добавлены вручную или по бесплатному доступу. «Период закончился» — ждут автосписания или должны быть удалены из группы.')}</h3>
+      ${g ? `<div class="row"><span>В группе сейчас</span><span class="n">${fmt(g.total)}</span></div>
+      <div class="row"><span>Оплачен текущий период</span><span class="n">${fmt(g.paid)}</span></div>
+      <div class="row"><span>Период закончился</span><span class="n">${fmt(g.lapsed)}</span></div>
+      <div class="row"><span>Без оплат клуба</span><span class="n">${fmt(g.no_payments)}</span></div>` : '<p class="note">Нет данных по группам</p>'}
+    </div>
+  </div>`;
+
+  // рост и удержание
+  const mrows = buckets(a, e, true);
+  h += `<h2>Рост и удержание</h2><p class="sub">Посчитано по истории всех заказов клуба. Если период ещё идёт — его цифры неполные.</p>
+  <div class="grid2">
+    <div class="card"><h3>Участники ${byDay ? 'по дням' : 'на конец месяца'} ${q('Сколько человек с оплаченным доступом было в конце дня (месяца).')}</h3><div class="chart" id="activeChart"></div></div>
+    <div class="card"><h3>Процент продления ${q('Из тех, у кого в этот день (месяц) закончился оплаченный период, сколько оплатили следующий (в течение недели). Считаются только периоды, по которым уже прошла неделя.')}</h3><div class="chart" id="renewChart"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Пришли и ушли ${q('Новые — первая оплата. Вернулись — оплатили после перерыва. Ушли — оплаченный период закончился и за неделю не продлили. Выручка в месяц — сумма действующих подписок в пересчёте на месяц.')}</h3>
+    <div class="scroll"><table><thead><tr><th>Месяц</th><th>Новые</th><th>Вернулись</th><th>Ушли</th><th>Итог</th><th>В клубе</th><th>Продлили</th><th>Выручка в месяц</th></tr></thead><tbody>
+    ${mrows.slice().reverse().map(m => `<tr><td>${esc(m.name)}${m.partial ? ' <small style="display:inline;color:var(--muted)">идёт</small>' : ''}</td><td>${m.new}</td><td>${m.returned}</td><td>${m.churned}</td><td class="${m.net >= 0 ? 'pos' : 'neg'}">${m.net > 0 ? '+' : ''}${m.net}</td><td>${fmt(m.active_end)}</td><td>${pct(m.renewal_rate)}</td><td>${rub(m.mrr)}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+
+  // жизнь участника
+  const life = ms => {
+    if (!ms.length) return null;
+    const ltv = ms.map(m => m[1]).sort((x, y) => x - y), mo = ms.map(m => m[2] / 30.44).sort((x, y) => x - y);
+    const med = v => v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+    const avg = v => v.reduce((s, x) => s + x, 0) / v.length;
+    const mature = ms.filter(m => m[0] <= addDays(TODAY, -183));
+    return {avg: avg(ltv), median: med(ltv), avg_months: Math.round(avg(mo) * 10) / 10, median_months: Math.round(med(mo) * 10) / 10,
+      share_6m: mature.length ? Math.round(mature.filter(m => m[2] >= 180).length / mature.length * 1000) / 10 : null};
+  };
+  const trial = (x, y) => {
+    let started = 0, paid = 0;
+    for (const ts of D.trials) { const t = ts.find(t => t[0] >= x && t[0] <= y); if (t) { started++; paid += t[1]; } }
+    return {started, paid, conv: started ? Math.round(paid / started * 1000) / 10 : null};
+  };
+  const LA = life(D.members), LP = life(came), tp = trial(a, e), ta = trial('0', TODAY);
+  const mon = v => String(v).replace('.', ',') + ' мес';
+  h += `<h2>Сколько живёт участник</h2>
+  <div class="kpis" style="grid-template-columns:repeat(${ta.started ? 4 : 3},1fr)">
+    <div class="card kpi"><div class="l">LTV участника ${q('Сколько в среднем принёс один участник за всё время в клубе. Верхняя цифра — у тех, кто впервые оплатил в выбранный период (у недавних она, естественно, меньше).')}</div><div class="v">${LP ? rub(LP.avg) : '—'}</div><div class="s">${LP ? `медиана ${rub(LP.median)} · ` : ''}все участники ${rub(LA.avg)}</div></div>
+    <div class="card kpi"><div class="l">Средний срок в клубе ${q('Сколько месяцев оплаченного доступа в среднем набирает участник (сумма всех периодов). Верхняя цифра — у пришедших в выбранный период.')}</div><div class="v">${LP ? mon(LP.avg_months) : '—'}</div><div class="s">все участники ${mon(LA.avg_months)} · до полугода доживают ${pct(LA.share_6m)}</div></div>
+    ${ta.started ? `<div class="card kpi"><div class="l">Пробный доступ → оплата ${q('Какая доля взявших пробный доступ оплатила клуб в течение 30 дней. Считаются пробные доступы, взятые в выбранный период.')}</div><div class="v">${pct(tp.conv)}</div><div class="s">${tp.paid} из ${fmt(tp.started)} · за всё время ${pct(ta.conv)}</div></div>` : ''}
+    <div class="card kpi"><div class="l">Выручка в месяц ${q('Сумма действующих подписок в пересчёте на месяц: 3 месяца за 8 970 ₽ = 2 990 ₽ в месяц. Это «база» клуба без разовых всплесков. На конец периода.')}</div><div class="v">${rub(A.mrr)}</div><div class="s">на ${dayLabel(e, true)}</div></div>
+  </div>`;
+
+  const src = {};
+  came.forEach(m => (src[m[5]] = src[m[5]] || []).push(m));
+  const sources = Object.entries(src).map(([name, ms]) => ({name, users: ms.length, active: ms.filter(m => m[4]).length,
+    ltv: ms.reduce((s, m) => s + m[1], 0) / ms.length, months: Math.round(ms.reduce((s, m) => s + m[2], 0) / ms.length / 30.44 * 10) / 10,
+    renewed: Math.round(ms.filter(m => m[3] > 1).length / ms.length * 100)})).sort((x, y) => y.users - x.users);
+  h += `<div class="grid2" style="margin-top:16px">
+    <div class="card"><h3>Давность у тех, кто в клубе ${nowTag} ${q('Сколько времени прошло с первой оплаты клуба у тех, у кого сейчас оплачен доступ.')}</h3>
+      ${D.tenure.map(t => `<div class="row"><span>${t.label}</span><span class="n">${t.count}<small>${pct(t.share)}</small></span></div><div class="bar"><i style="width:${t.share}%"></i></div>`).join('')}</div>
+    <div class="card"><h3>Источники ${q('Откуда пришли те, кто впервые оплатил клуб в выбранный период, — по UTM-метке при регистрации в школе (если её нет — по метке заказа). «Без метки» — пришли до того, как метки стали ставить, или по прямой ссылке.')}</h3>
+      ${sources.length ? `<div class="scroll"><table><thead><tr><th>Источник</th><th>Людей</th><th>Сейчас</th><th>LTV</th><th>Месяцев</th><th>Продлили</th></tr></thead><tbody>
+      ${sources.map(s => `<tr><td>${esc(s.name)}</td><td>${s.users}</td><td>${s.active}</td><td>${rub(s.ltv)}</td><td>${String(s.months).replace('.', ',')}</td><td>${s.renewed}%</td></tr>`).join('')}
+      </tbody></table></div>` : '<p class="note">За период новых участников нет</p>'}</div>
+  </div>`;
+
+  // когорты
+  let cohorts = D.cohorts.filter(c => c.month >= a.slice(0, 7) && c.month <= e.slice(0, 7)), cohortNote = '';
+  if (!cohorts.length) { cohorts = D.cohorts.slice(-12); cohortNote = '<p class="note">В выбранном периоде нет завершённых месяцев — показаны последние 12 месяцев.</p>'; }
+  const maxN = Math.max(...cohorts.map(c => c.ret.length), 1);
+  const cell = v => { if (v == null) return '<td></td>'; const al = Math.max(.06, v / 100); return `<td style="background:rgba(30,113,72,${al.toFixed(2)});color:${v > 55 ? '#fff' : 'var(--ink)'}">${v}</td>`; };
+  h += `<div class="card" style="margin-top:16px"><h3>Когорты: доля оставшихся через N месяцев, % ${q('Люди, впервые оплатившие клуб в одном месяце. Цифра — какой процент из них был с оплаченным доступом в конце 1-го, 2-го… месяца после вступления.')}</h3>
+    <div class="scroll"><table class="cohort"><thead><tr><th style="text-align:left">Пришли</th><th style="text-align:left">Людей</th>${Array.from({length: maxN}, (_, i) => `<th>${i + 1}</th>`).join('')}</tr></thead><tbody>
+    ${cohorts.map(c => `<tr><td>${esc(c.name)}</td><td>${c.size}</td>${Array.from({length: maxN}, (_, i) => cell(c.ret[i])).join('')}</tr>`).join('')}
+    </tbody></table></div>${cohortNote}</div>`;
+
+  // менеджеры
+  const mgrRows = x => Object.entries(x.mgr).map(([name, v]) => ({name, manual: [v[0], v[1]], auto: [v[2], v[3]]}))
+    .sort((r1, r2) => (r2.manual[1] + r2.auto[1]) - (r1.manual[1] + r1.auto[1]));
+  const mgrTable = rs => rs.length ? `<div class="scroll"><table><thead><tr><th>Менеджер</th><th>Ручное</th><th>Авто</th><th>Итого</th></tr></thead><tbody>
+    ${(() => { const tot = rs.reduce((s, r) => [s[0] + r.manual[0] + r.auto[0], s[1] + r.manual[1] + r.auto[1]], [0, 0]);
+      return `<tr><td><b>Итого</b></td><td></td><td></td><td><b>${tot[0]} · ${rub(tot[1])}</b></td></tr>`; })()}
+    ${rs.map(r => `<tr><td>${esc(r.name)}</td><td>${r.manual[0] ? `${r.manual[0]} · ${rub(r.manual[1])}` : '—'}</td><td>${r.auto[0] ? `${r.auto[0]} · ${rub(r.auto[1])}` : '—'}</td><td>${r.manual[0] + r.auto[0]} · ${rub(r.manual[1] + r.auto[1])}</td></tr>`).join('')}
+    </tbody></table></div>` : '<p class="note">Нет оплат с менеджером</p>';
+  const MG = {cur: mgrRows(A), prev: mgrRows(Q)};
+  h += `<h2>Продажи по менеджерам</h2><p class="sub">Оплаты клуба, в которых указан менеджер. «Ручное» — первая покупка или оплата по ссылке, «Авто» — автосписание.</p>
+  <div class="card"><div class="tabs" id="mgrTabs"><button class="on" data-k="cur">${esc(lbl)}</button>${noPrev ? '' : `<button data-k="prev">${esc(plbl)}</button>`}</div><div id="mgrBody">${mgrTable(MG.cur)}</div></div>`;
+
+  // итоги
+  const ins = insights(A, Q, LA, tp, lbl, plbl);
+  if (ins.length && !noPrev) {
+    h += `<h2>Итоги периода</h2><p class="sub">Итоги за ${esc(lbl)} в сравнении с ${esc(plbl)}. Пересчитывается автоматически.</p>
+    <div class="insights">${ins.map(i => `<div class="card ins ${i.tone}"><div class="tag">${i.tone === 'good' ? '✓ Хорошо' : '! Внимание'}</div><div class="t">${esc(i.title)}</div><p>${esc(i.text)}</p></div>`).join('')}</div>`;
+  }
+
+  $('#content').innerHTML = h;
+
+  if (rows.length) stackedBars($('#revChart'), rows, [
+    {key: 'rev_renew', label: 'Продления', color: 'var(--s-renew)'},
+    {key: 'rev_new', label: 'Новые', color: 'var(--s-new)'},
+    {key: 'rev_return', label: 'Вернувшиеся', color: 'var(--s-return)'},
+  ]);
+  dailyBars($('#dailyChart'), dueRows);
+  lineChart($('#activeChart'), rows, 'active_end', {label: 'В клубе', extra: r => `Пришли ${r.new + r.returned}, ушли ${r.churned}`});
+  lineChart($('#renewChart'), rows, 'renewal_rate', {label: 'Продлили', pct: true, max: 100, extra: r => `${r.renewed_m} из ${r.due_m}`});
+
+  $('#mgrTabs').addEventListener('click', ev => {
+    const btn = ev.target.closest('button'); if (!btn) return;
+    $('#mgrTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
+    $('#mgrBody').innerHTML = mgrTable(MG[btn.dataset.k]);
+  });
+}
+
+function insights(m, p, lt, t, lbl, plbl) {
+  const out = [];
+  const add = (good, title, text) => out.push({tone: good ? 'good' : 'bad', title, text});
+  const year = ALLM.filter(x => !x.partial && x.renewal_rate != null).slice(-12).map(x => x.renewal_rate);
+  if (p.mrr) {
+    const ch = (m.mrr - p.mrr) / p.mrr * 100;
+    add(ch >= 0, `Выручка в месяц от подписок ${ch >= 0 ? 'выросла' : 'снизилась'} на ${Math.abs(ch).toFixed(0)}%`,
+      `${rubFull(m.mrr)} против ${rubFull(p.mrr)} (${plbl}). Это «база» клуба без разовых всплесков.`);
+  }
+  if (m.renewal_rate != null) {
+    const avg = year.length ? year.reduce((s, x) => s + x, 0) / year.length : m.renewal_rate;
+    add(m.renewal_rate >= avg, `Продлили ${m.renewal_rate.toFixed(0)}% участников`,
+      `Из ${m.due_m} человек, у кого закончился оплаченный период, продлили ${m.renewal_rate.toFixed(0)}% ` +
+      `(${plbl}: ${(p.renewal_rate || 0).toFixed(0)}%, в среднем за год ${avg.toFixed(0)}%). ` +
+      'Продление — управляемый процесс: касания перед окончанием доступа и выгодные условия постоянным.');
+  }
+  add(m.net >= 0, `Клуб ${m.net >= 0 ? 'вырос' : 'сократился'} на ${Math.abs(m.net)} чел.`,
+    `Пришли ${m.new} новых и вернулись ${m.returned}, ушли ${m.churned}. На конец периода в клубе ${m.active_end} (${plbl}: ${p.active_end}).` +
+    (m.net >= 0 ? '' : ' Новых меньше, чем ушедших — клубу нужен приток: прогрев внутри основных продуктов и работа с архивом.'));
+  if (lt.share_6m != null)
+    add(lt.avg_months >= 6, `Участник в среднем остаётся ${String(lt.avg_months.toFixed(1)).replace('.', ',')} мес`,
+      `Ориентир — от 6 месяцев. До полугода доживают ${lt.share_6m.toFixed(0)}% участников, средний LTV ${rubFull(lt.avg)}.`);
+  if (p.new) {
+    const ch = (m.new - p.new) / p.new * 100;
+    add(ch >= 0, `Новых участников ${ch >= 0 ? 'больше' : 'меньше'} на ${Math.abs(ch).toFixed(0)}%`,
+      `${m.new} против ${p.new}. Лучшее время продать клуб — сразу после окончания основного продукта, пока у выпускников максимум энтузиазма.`);
+  }
+  if (t.started >= 10)
+    add(t.conv >= 15, `Пробный доступ → оплата: ${String(t.conv.toFixed(0)).replace('.', ',')}%`,
+      `За период пробный доступ взяли ${t.started} чел., оплатили клуб в течение 30 дней — ${t.paid}.`);
+  return out;
+}
+</script>
+</body>
+</html>
