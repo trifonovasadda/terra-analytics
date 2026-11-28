@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Рассылки · Территория Нити Жизни</title>
+<style>
+:root{
+  --bg:#F8F3E8; --card:#FFFDF7; --ink:#173D2D; --ink2:#4E6358; --muted:#8A958C;
+  --line:#E6DCC6; --grid:#EEE6D5; --olive:#173D2D; --olive2:#2E5A45;
+  --sand:#B99145; --terra:#B99145; --good:#1E7148; --bad:#B5452F;
+  --s-renew:#1E7148; --s-new:#C8932F; --s-return:#B5452F;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);min-height:100vh}
+.wrap{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+h1{font:400 46px/1.08 var(--serif);margin:0 0 10px;letter-spacing:-.01em}
+h1 em{color:var(--sand);font-style:italic}
+h2{font:400 28px/1.2 var(--serif);margin:48px 0 6px}
+h3{font:600 14px/1.3 var(--sans);margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin-bottom:14px}
+.sub{color:var(--ink2);font-size:13px;margin:0 0 16px}
+.meta{color:var(--ink2);font-size:13px}
+.meta a{color:var(--ink2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:20px;box-shadow:0 1px 2px rgba(23,61,45,.04)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:24px}
+.kpi{padding:16px}
+.kpi .l{font-size:12px;color:var(--ink2);display:flex;justify-content:space-between;gap:6px;min-height:32px}
+.kpi .v{font:600 26px/1.15 var(--sans);white-space:nowrap;overflow:hidden;margin:6px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink2)}
+.kpi.hero{background:#173D2D;color:#fff;border:0}
+.kpi.hero .l,.kpi.hero .s{color:rgba(255,255,255,.8)}
+.kpi.hero .s b{color:#D9B977;font-weight:600}
+.q{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--grid);color:var(--ink2);font:600 10px/16px var(--sans);justify-content:center;cursor:help;flex:none;position:relative}
+.hero .q{background:rgba(255,255,255,.18);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font:500 12px/1.3 var(--sans);color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;text-align:right;border-bottom:1px solid var(--grid);font-size:14px;vertical-align:top}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+tr:last-child td{border-bottom:0}
+td{white-space:nowrap} td:first-child{white-space:normal}
+td small{display:block;color:var(--muted);font-size:11px}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--grid);gap:12px}
+.row:last-child{border-bottom:0}
+.row .n{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .n small{font-weight:400;color:var(--muted);margin-left:4px}
+.bar{height:6px;border-radius:3px;background:var(--grid);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--olive2);border-radius:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:11px var(--sans);fill:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:#283127;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.tip b{font-weight:600}
+.tip i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.cohort td{text-align:center;font-size:12px;padding:6px 4px;border-bottom:2px solid #fff;border-right:2px solid #fff}
+.cohort td:first-child,.cohort td:nth-child(2){text-align:left;background:none;white-space:nowrap}
+.cohort th{text-align:center}
+.insights{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ins{border-left:3px solid var(--bad);padding:16px 18px}
+.ins.good{border-left-color:var(--good)}
+.ins .tag{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.ins.bad .tag{color:var(--bad)} .ins.good .tag{color:var(--good)}
+.ins .t{font:400 19px/1.3 var(--serif);margin-bottom:6px}
+.ins p{margin:0;color:var(--ink2);font-size:14px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.tabs{display:inline-flex;background:var(--grid);border-radius:2px;padding:3px;margin-bottom:12px}
+.tabs button{border:0;background:none;font:500 13px var(--sans);padding:6px 12px;border-radius:8px;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pbar{position:sticky;top:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:24px -16px 0;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.pbar .tabs{margin:0;flex-wrap:wrap}
+.pbar select,.pbar input{font:13px var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:2px;padding:0 8px;height:32px}
+.pbar .dates{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.plabel{font-size:12px;color:var(--ink2);margin-left:auto}
+.plabel b{color:var(--ink);font-weight:600}
+.nowtag{font:500 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--grid);padding:4px 6px;border-radius:2px}
+.sum{text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:currentColor;cursor:help}
+/* вход */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+#gate form{width:100%;max-width:360px;text-align:left}
+#gate input{width:100%;font:16px var(--sans);padding:12px 14px;border:1px solid var(--line);border-radius:0;background:#fff;margin:14px 0 12px;outline:none}
+#gate input:focus{border-color:var(--olive2)}
+#gate button{width:100%;font:600 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#fff;border:0;border-radius:0;padding:15px;background:#173D2D;cursor:pointer}
+#gate .err{color:var(--bad);font-size:13px;min-height:18px;margin-top:10px}
+#app{display:none}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.pbar{position:static}.plabel{margin-left:0;width:100%}h1{font-size:34px}.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3,.insights{grid-template-columns:1fr}.kpi .v{font-size:26px}}
+
+.back{display:inline-block;font-size:13px;color:var(--ink2);text-decoration:none;margin-bottom:18px}
+.back:hover{color:var(--ink)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.tabs.big{margin:0}.tabs.big button{padding:9px 16px;font-size:14px}
+.pbar .row2{display:flex;flex-wrap:wrap;gap:8px 12px;width:100%;align-items:center}
+.pbar input[type=search]{flex:1;min-width:200px}
+p.plabel{font-size:13px;color:var(--ink2);margin:18px 0 0}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.card.tbl{padding:6px 20px 16px}
+table.mt th{vertical-align:bottom}
+table.mt th .q{vertical-align:-3px;margin-left:2px}
+table.mt td.name{display:flex;gap:10px;align-items:flex-start;min-width:300px;white-space:normal;text-align:left}
+table.mt td.name b{display:block;font-weight:600;font-size:14px;line-height:1.3}
+table.mt td.name span:not(.ic){display:block;color:var(--ink2);font-size:12px;margin-top:2px}
+table.mt td.name small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.ic{width:28px;height:28px;border-radius:8px;background:var(--grid);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+td.n{font-weight:600;padding-top:12px}
+td.m{min-width:86px;padding-top:10px}
+td.m b{display:block;font-weight:600}
+td.m small{display:block;color:var(--muted);font-size:11px;margin-top:0}
+.mbar{display:block;height:4px;border-radius:2px;background:var(--grid);margin-top:5px;overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--olive2);border-radius:2px}
+tr.day td{background:var(--bg);padding:14px 8px 10px;border-bottom:1px solid var(--line);text-align:left}
+tr.day .dd{font:400 21px var(--serif)}
+tr.day .wd{color:var(--muted);font-size:12px;margin-left:6px}
+tr.day .ds{float:right;font-size:12px;color:var(--ink2);margin-top:6px}
+tr.day .ds b{color:var(--ink);font-weight:600}
+.more{display:block;margin:14px auto 0;border:1px solid var(--line);background:var(--card);border-radius:2px;padding:9px 18px;font:500 13px var(--sans);cursor:pointer;color:var(--ink)}
+
+.flags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.flag{font:500 10px/1 var(--sans);padding:3px 6px;border-radius:4px;background:rgba(181,54,47,.08);color:var(--bad);cursor:help}
+.flag.soft{background:var(--grid);color:var(--ink2)}
+.alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:18px}
+.alert{padding:16px;border-top:3px solid var(--good)}
+.alert.warn{border-top-color:#C48A1A}.alert.bad{border-top-color:var(--bad)}
+.alert .ah{display:flex;flex-direction:column;gap:8px}
+.alert .badge{align-self:flex-start;font:600 11px/1 var(--sans);padding:4px 7px;border-radius:4px;background:rgba(61,110,42,.1);color:var(--good)}
+.alert.warn .badge{background:rgba(196,138,26,.12);color:#9A6A0E}.alert.bad .badge{background:rgba(181,54,47,.1);color:var(--bad)}
+.alert .at{font-size:12px;color:var(--ink2)}
+.alert .av{font:600 26px/1.15 var(--sans);margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.alert .ac{font-size:12px;color:var(--ink2)}
+.alert .aa{font-size:12px;color:var(--ink);margin:10px 0 0;line-height:1.45}
+.mono{font:12px/1.4 ui-monospace,Menlo,monospace;white-space:normal;word-break:break-all;text-align:right;max-width:60%}
+.probs{margin-top:14px;padding:14px 16px;background:rgba(181,54,47,.05);border-radius:8px;font-size:13px;line-height:1.55}
+.probs ul{margin:6px 0 10px;padding-left:18px}
+code{font:12px ui-monospace,Menlo,monospace;background:var(--grid);padding:1px 5px;border-radius:4px}
+code.block{display:block;padding:10px 12px;margin:8px 0;word-break:break-all}
+ol.check{margin:0;padding-left:20px;font-size:14px;line-height:1.55}ol.check li{margin-bottom:8px}
+ol.check a,.note a{color:var(--olive)}
+pre.tpl{white-space:pre-wrap;font:13px/1.55 var(--sans);background:var(--bg);padding:14px;border-radius:8px;margin:0}
+a.open-gc{display:inline-block;margin:12px 0 0;text-decoration:none;font-size:12px;padding:7px 12px}
+.rsub{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+@media (max-width:700px){tr.day .ds{float:none;display:block}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="card" autocomplete="on">
+    <div class="eyebrow">Территория Нити Жизни</div>
+    <h1 style="font-size:32px">Аналитика <em>клуба</em></h1>
+    <div class="meta">Введите пароль, чтобы открыть отчёт</div>
+    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
+    <button type="submit">Войти</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<div id="app"><div class="wrap" id="root"></div></div>
+<div class="tip" id="tip"></div>
+
+<script>
+
+const DATA_URL = 'mail.enc.json';
+const $ = (s, el = document) => el.querySelector(s);
+const nf = new Intl.NumberFormat('ru-RU');
+const fmt = n => nf.format(Math.round(n));
+// суммы: коротко («1,33 млн ₽»), при наведении — целиком, с копейками
+const nf2 = new Intl.NumberFormat('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const rubFull = n => { const v = Math.round(n * 100) / 100; return (Number.isInteger(v) ? nf.format(v) : nf2.format(v)) + ' ₽'; };
+const rubShort = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace('.', ',').replace(/,?0+$/, '') + ' млн ₽'
+  : n >= 1e4 ? fmt(n / 1000) + ' тыс ₽' : fmt(n) + ' ₽';
+const rub = n => { const s = rubShort(n), f = rubFull(n); return s === f ? s : `<span class="sum" data-tip="${f}">${s}</span>`; };
+const pct = n => n == null ? '—' : String(Math.round(n * 10) / 10).replace('.', ',') + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const mlabel = (k, withYear) => { const [y, m] = k.split('-'); return MON[m - 1] + (withYear || m === '01' ? ' ' + y.slice(2) : ''); };
+
+/* ---------- расшифровка ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(pkg, password) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(pkg.salt), iterations: pkg.iter, hash: 'SHA-256'},
+    base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(pkg.iv)}, key, b64(pkg.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function open(password, remember) {
+  const pkg = await fetch(DATA_URL + '?t=' + Date.now(), {cache: 'no-store'}).then(r => r.json());
+  const data = await decrypt(pkg, password);
+  if (remember) try { sessionStorage.setItem('tnj_pw', password); } catch (e) {}
+  $('#gate').style.display = 'none';
+  $('#app').style.display = 'block';
+  render(data);
+}
+$('#gate form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  try { await open($('#pw').value, true); }
+  catch (err) { $('#err').textContent = err.name === 'OperationError' ? 'Неверный пароль' : 'Не удалось загрузить данные'; }
+});
+try { const saved = sessionStorage.getItem('tnj_pw'); if (saved) open(saved, false).catch(() => {}); } catch (e) {}
+
+/* ---------- подсказки ---------- */
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = x + scrollX + 'px'; tip.style.top = y + scrollY + 'px';
+}
+const hideTip = () => tip.style.opacity = 0;
+document.addEventListener('mouseover', e => { const q = e.target.closest('[data-tip]'); if (q) showTip(esc(q.dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mousemove', e => { if (e.target.closest('[data-tip]')) showTip(esc(e.target.closest('[data-tip]').dataset.tip).replace(/\n/g, '<br>'), e); });
+document.addEventListener('mouseout', e => { if (e.target.closest('[data-tip]')) hideTip(); });
+const q = text => `<span class="q" data-tip="${esc(text)}" tabindex="0">?</span>`;
+// длинная сумма целиком: уменьшаем шрифт числа в карточке, пока оно помещается
+function fitKpis() {
+  document.querySelectorAll('.kpi .v').forEach(v => {
+    v.style.fontSize = '';
+    let size = parseFloat(getComputedStyle(v).fontSize);
+    while (v.scrollWidth > v.clientWidth && size > 13) { size -= 1; v.style.fontSize = size + 'px'; }
+  });
+}
+new MutationObserver(() => requestAnimationFrame(fitKpis)).observe(document.body, {childList: true, subtree: true});
+addEventListener('resize', fitKpis);
+
+/* ---------- даты ---------- */
+const MONF = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+const MONG = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const WD = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+const addDays = (s, n) => new Date(Date.parse(s + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+const daysBetween = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5);
+const monthLast = s => new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7), 0)).toISOString().slice(0, 10);
+const shiftMonth = (s, n) => {
+  const first = new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1 + n, 1)).toISOString().slice(0, 10);
+  const last = monthLast(first), d = first.slice(0, 8) + s.slice(8);
+  return s === monthLast(s) || d > last ? last : d;
+};
+const dayLabel = (s, withYear) => `${+s.slice(8)} ${MON[+s.slice(5, 7) - 1]}` + (withYear ? ' ' + s.slice(0, 4) : '');
+function rangeLabel(a, b) {
+  if (a === b) return dayLabel(a, true);
+  if (a.slice(8) === '01' && b === monthLast(a)) return MONF[+a.slice(5, 7) - 1] + ' ' + a.slice(0, 4);
+  return dayLabel(a, a.slice(0, 4) !== b.slice(0, 4)) + ' – ' + dayLabel(b, true);
+}
+
+/* ---------- состояние ---------- */
+let D, TODAY, FIRST;
+const CH = {mail: ['Почта', 'var(--s-renew)'], tg: ['Telegram', 'var(--s-new)'], max: ['MAX', 'var(--s-return)'], vk: ['ВКонтакте', 'var(--muted)'], other: ['Другое', 'var(--muted)']};
+const ICON = {
+  mail: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  tg: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"/><path d="m9 13 8-6"/></svg>',
+  max: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a8 8 0 1 1 3.2 6.4L4 20l1-3.6A8 8 0 0 1 4 12z"/></svg>',
+};
+ICON.vk = ICON.other = ICON.max;
+const S = {tab: 'dates', a: '', b: '', key: 'd30', ch: 'all', club: 0, q: '', shown: 40};
+const F = {id: 0, date: 1, ch: 2, title: 3, subject: 4, sent: 5, total: 6, views: 7, clicks: 8, replies: 9, undelivered: 10, unsub: 11, club: 12};
+
+function presets() {
+  const m1 = TODAY.slice(0, 8) + '01', pm = shiftMonth(m1, -1);
+  return {
+    d7: ['7 дней', addDays(TODAY, -6), TODAY],
+    d30: ['30 дней', addDays(TODAY, -29), TODAY],
+    month: ['Этот месяц', m1, TODAY],
+    prev: ['Прошлый месяц', pm, monthLast(pm)],
+    m3: ['3 месяца', addDays(shiftMonth(TODAY, -3), 1), TODAY],
+    year: ['Год', addDays(shiftMonth(TODAY, -12), 1), TODAY],
+    all: ['Всё время', FIRST, TODAY],
+  };
+}
+
+function save() { try { sessionStorage.setItem('tnj_mail', JSON.stringify(S)); } catch (e) {} }
+
+function setPeriod(a, b, key) {
+  if (a > b) [a, b] = [b, a];
+  S.a = a < FIRST ? FIRST : a > TODAY ? TODAY : a;
+  S.b = b > TODAY ? TODAY : b < S.a ? S.a : b;
+  S.key = key; S.shown = 40;
+  draw();
+}
+
+// фильтр по каналу, клубу и поиску
+function match(m) {
+  if (S.ch !== 'all' && m[F.ch] !== S.ch) return false;
+  if (S.club && !m[F.club]) return false;
+  if (S.q) { const t = (m[F.title] + ' ' + m[F.subject]).toLowerCase(); if (!S.q.toLowerCase().split(/\s+/).every(w => t.includes(w))) return false; }
+  return true;
+}
+
+function sum(rows) {
+  const s = {n: rows.length, sent: 0, total: 0, views: 0, clicks: 0, replies: 0, undelivered: 0, unsub: 0};
+  rows.forEach(m => { for (const k of ['sent', 'total', 'views', 'clicks', 'replies', 'undelivered', 'unsub']) s[k] += m[F[k]]; });
+  s.delivered = Math.max(0, s.sent - s.undelivered);
+  return s;
+}
+const share = (x, t) => t ? x / t * 100 : null;
+const p1 = v => v == null ? '—' : (v >= 10 || v === 0 ? Math.round(v) : Math.round(v * 10) / 10).toString().replace('.', ',') + '%';
+
+// оплаты по ссылкам из рассылок за период: 0 день, 1 канал, 2 кампания, 3 заказов, 4 оплат, 5 ₽, 6 оплат клуба, 7 ₽ клуба
+function revenue(a, b) {
+  const r = {orders: 0, paid: 0, rub: 0, byDay: {}, camps: {}};
+  for (const x of D.revenue) {
+    if (x[0] < a || x[0] > b || (S.ch !== 'all' && x[1] !== S.ch)) continue;
+    const paid = S.club ? x[6] : x[4], rub = S.club ? x[7] : x[5];
+    if (S.club && !paid) continue;
+    r.orders += S.club ? 0 : x[3]; r.paid += paid; r.rub += rub;
+    const d = r.byDay[x[0]] || (r.byDay[x[0]] = {paid: 0, rub: 0, ch: {}}); d.paid += paid; d.rub += rub; d.ch[x[1]] = (d.ch[x[1]] || 0) + rub;
+    const c = r.camps[x[2] + '|' + x[1]] || (r.camps[x[2] + '|' + x[1]] = {name: x[2], ch: x[1], orders: 0, paid: 0, rub: 0});
+    c.orders += x[3]; c.paid += paid; c.rub += rub;
+  }
+  return r;
+}
+
+/* ---------- графики ---------- */
+function niceMax(v) { if (!(v > 0)) return 4; const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v / p / 2) * p * 2; }
+function axisFmt(v) { return v >= 1e6 ? (v / 1e6).toString().replace('.', ',') + ' млн' : v >= 1e3 ? fmt(v / 1e3) + ' тыс' : v; }
+
+function revChart(el, buckets, chans) {
+  const W = 1000, H = 240, L = 56, B = 28, T = 10;
+  const max = niceMax(Math.max(0, ...buckets.map(r => r.rub)));
+  const n = buckets.length, slot = (W - L) / n, bw = Math.max(3, Math.min(40, slot * .62)), step = Math.max(1, Math.ceil(n / 16));
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${axisFmt(v)}</text>`; }
+  buckets.forEach((r, i) => {
+    const x = L + slot * i + (slot - bw) / 2;
+    const tipHtml = `<b>${esc(r.name)}</b><br>Рассылок: ${r.n}, сообщений ${fmt(r.sent)}<br>` + chans.filter(c => r.ch[c]).map(c => `<i style="background:${CH[c][1]}"></i>${CH[c][0]}: ${rubFull(r.ch[c])}`).join('<br>') + `<br>Оплат: <b>${r.paid}</b> на <b>${rubFull(r.rub)}</b>`;
+    s += `<g class="hov" data-html="${esc(tipHtml)}"><rect x="${L + slot * i}" y="${T}" width="${slot}" height="${H - T - B}" fill="transparent"/>`;
+    let acc = 0; const vis = chans.filter(c => r.ch[c] > 0);
+    vis.forEach((c, j) => {
+      const v = r.ch[c], y0 = y(acc), y1 = y(acc + v); acc += v; const h = Math.max(0, y0 - y1 - (j ? 2 : 0));
+      s += j === vis.length - 1 && h > 4 ? `<path d="M${x},${y1 + h} v${-(h - 4)} q0,-4 4,-4 h${bw - 8} q4,0 4,4 v${h - 4} z" fill="${CH[c][1]}"/>` : `<rect x="${x}" y="${y1}" width="${bw}" height="${h}" fill="${CH[c][1]}"/>`;
+    });
+    s += `</g>`;
+    if (i % step === 0) s += `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(r.label)}</text>`;
+  });
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function bindHover(el) {
+  el.querySelectorAll('.hov').forEach(g => {
+    g.addEventListener('mousemove', e => { showTip(g.dataset.html, e); g.style.filter = 'brightness(1.06)'; });
+    g.addEventListener('mouseleave', () => { hideTip(); g.style.filter = ''; });
+  });
+}
+
+/* ---------- отрисовка ---------- */
+function render(data) {
+  D = data; TODAY = D.today;
+  FIRST = D.sends.length ? D.sends[D.sends.length - 1][F.date].slice(0, 10) : TODAY;
+  try { Object.assign(S, JSON.parse(sessionStorage.getItem('tnj_mail')) || {}); } catch (e) {}
+  const pr = presets();
+  if (pr[S.key]) [, S.a, S.b] = pr[S.key];
+  else if (!S.a) [, S.a, S.b] = pr.d30;
+  S.shown = 40;
+  const months = []; for (let m = TODAY.slice(0, 7); m >= FIRST.slice(0, 7); m = shiftMonth(m + '-01', -1).slice(0, 7)) months.push(m);
+  const chans = Object.keys(CH).filter(c => D.sends.some(m => m[F.ch] === c) || D.autos.some(m => m[F.ch] === c));
+  $('#root').innerHTML = `
+  <a class="back" href="./">← Меню</a>
+  <div class="head">
+    <div><div class="eyebrow">Аналитика школы</div><h1>Рассылки</h1>
+    <div class="meta">Данные из GetCourse на ${esc(D.updated)}, обновляются каждые 2 часа · <a href="#" id="logout">Выйти</a></div></div>
+    <div class="tabs big" id="tabs"><button data-t="dates">Рассылки по датам</button><button data-t="autos">Автописьма</button><button data-t="health">Здоровье рассылки</button></div>
+  </div>
+  <div class="pbar" id="pbar">
+    <div class="tabs" id="pTabs">${Object.entries(pr).map(([k, v]) => `<button data-k="${k}">${v[0]}</button>`).join('')}</div>
+    <select id="pMonth" aria-label="Месяц"><option value="">Месяц…</option>${months.map(m => `<option value="${m}">${MONF[+m.slice(5) - 1]} ${m.slice(0, 4)}</option>`).join('')}</select>
+    <span class="dates" id="pDates"><input type="date" id="pFrom" min="${FIRST}" max="${TODAY}" aria-label="С"> – <input type="date" id="pTo" min="${FIRST}" max="${TODAY}" aria-label="По"></span>
+    <div class="row2">
+      <div class="tabs" id="chTabs"><button data-c="all">Все каналы</button>${chans.map(c => `<button data-c="${c}">${CH[c][0]}</button>`).join('')}</div>
+      <div class="tabs" id="clubTabs"><button data-v="0">Вся школа</button><button data-v="1">Клуб ТНЖ</button></div>
+      <input type="search" id="q" placeholder="Поиск по названию или теме" value="${esc(S.q)}">
+    </div>
+  </div>
+  <div id="content"></div>`;
+
+  $('#tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { S.tab = b.dataset.t; S.shown = 40; draw(); } });
+  $('#pTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { const [, a, z] = presets()[b.dataset.k]; setPeriod(a, z, b.dataset.k); } });
+  $('#pMonth').addEventListener('change', e => { const m = e.target.value; if (m) setPeriod(m + '-01', monthLast(m + '-01'), 'm'); });
+  const fromInputs = () => { if ($('#pFrom').value && $('#pTo').value) setPeriod($('#pFrom').value, $('#pTo').value, ''); };
+  $('#pFrom').addEventListener('change', fromInputs); $('#pTo').addEventListener('change', fromInputs);
+  $('#chTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { S.ch = b.dataset.c; S.shown = 40; draw(); } });
+  $('#clubTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { S.club = +b.dataset.v; S.shown = 40; draw(); } });
+  let qt; $('#q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { S.q = e.target.value.trim(); S.shown = 40; draw(); }, 200); });
+  $('#logout').addEventListener('click', e => { e.preventDefault(); try { sessionStorage.removeItem('tnj_pw'); sessionStorage.removeItem('tnj_mail'); } catch (x) {} location.href = './'; });
+  $('#content').addEventListener('click', e => {
+    if (e.target.id === 'more') { S.shown += 40; draw(); }
+    const c = e.target.closest('[data-copy]');
+    if (c) navigator.clipboard.writeText($('#' + c.dataset.copy).textContent).then(() => { c.textContent = 'Скопировано ✓'; setTimeout(() => c.textContent = 'Скопировать текст', 2000); }).catch(() => {});
+  });
+  draw();
+}
+
+const pctCell = (x, t, opts = {}) => {
+  const v = share(x, t), w = v == null ? 0 : Math.min(100, v);
+  const bad = opts.badBelow != null && v != null && v < opts.badBelow;
+  return `<td class="m"><b class="${bad ? 'neg' : ''}">${p1(v)}</b><small>${t ? fmt(x) : '&nbsp;'}</small><span class="mbar"><i style="width:${w}%;${bad ? 'background:var(--bad)' : ''}"></i></span></td>`;
+};
+const TIP = {
+  sent: 'Сколько сообщений GetCourse отправил получателям.',
+  delivered: 'Доля отправленных, которые дошли (отправлено минус «не доставлено»). Красным — меньше 90%: стоит проверить базу.',
+  views: 'Доля доставленных, которые открыли письмо. В Telegram и MAX GetCourse видит открытие только при переходе по ссылке, поэтому там «открыли» = «перешли».',
+  clicks: 'Доля доставленных, которые перешли по ссылке из сообщения.',
+  ctor: 'Из открывших — сколько перешли по ссылке. Показывает, насколько цепляет само содержание письма.',
+  unsub: 'Доля доставленных, которые отписались от рассылки по этому письму.',
+};
+const thead = first => `<thead><tr><th>${first}</th><th>Отправляли ${q(TIP.sent)}</th><th>Доставлено ${q(TIP.delivered)}</th><th>Открыли ${q(TIP.views)}</th><th>Перешли ${q(TIP.clicks)}</th><th>Из открывших ${q(TIP.ctor)}</th><th>Отписки ${q(TIP.unsub)}</th></tr></thead>`;
+function mrow(m, sub) {
+  const s = sum([m]);
+  return `<tr><td class="name"><span class="ic" style="color:${CH[m[F.ch]][1]}">${ICON[m[F.ch]]}</span><div><b>${esc(m[F.title])}</b>${m[F.subject] && m[F.subject] !== m[F.title] ? `<span>${esc(m[F.subject])}</span>` : ''}<small>${sub}${s.undelivered ? ' · не дошло ' + fmt(s.undelivered) : ''}${m[F.club] ? ' · клуб' : ''}</small>${flagBadges(m)}</div></td>
+    <td class="n">${fmt(s.sent)}</td>${pctCell(s.delivered, s.sent, {badBelow: 90})}${pctCell(s.views, s.delivered)}${pctCell(s.clicks, s.delivered)}${pctCell(s.clicks, s.views)}${pctCell(s.unsub, s.delivered)}</tr>`;
+}
+
+function kpis(s, first, rv) {
+  return `<div class="kpis">
+    <div class="card kpi hero"><div class="l">${first[0]} ${q(first[1])}</div><div class="v">${fmt(s.n)}</div><div class="s">отправляли <b>${fmt(s.sent)}</b></div></div>
+    <div class="card kpi"><div class="l">Доставлено ${q(TIP.delivered)}</div><div class="v">${p1(share(s.delivered, s.sent))}</div><div class="s">${fmt(s.delivered)} сообщений</div></div>
+    <div class="card kpi"><div class="l">Открыли ${q(TIP.views)}</div><div class="v">${p1(share(s.views, s.delivered))}</div><div class="s">${fmt(s.views)} человек</div></div>
+    <div class="card kpi"><div class="l">Перешли ${q(TIP.clicks)}</div><div class="v">${p1(share(s.clicks, s.delivered))}</div><div class="s">${fmt(s.clicks)} человек</div></div>
+    <div class="card kpi"><div class="l">Из открывших ${q(TIP.ctor)}</div><div class="v">${p1(share(s.clicks, s.views))}</div><div class="s">клики ÷ открытия</div></div>
+    <div class="card kpi"><div class="l">Отписки ${q(TIP.unsub)}</div><div class="v">${p1(share(s.unsub, s.delivered))}</div><div class="s">${fmt(s.unsub)} человек</div></div>
+    ${rv ? `<div class="card kpi"><div class="l">Оплаты с рассылок ${q('Оплаченные заказы, созданные по ссылкам из писем и сообщений (по UTM-меткам: mail_…, tg_…, max_…). Привязаны ко дню письма из метки utm_term. Посты в каналах Telegram и MAX сюда не входят.' + (S.club ? ' Только заказы клуба.' : ''))}</div><div class="v">${rub(rv.rub)}</div><div class="s">${fmt(rv.paid)} оплат${S.club ? '' : ` из ${fmt(rv.orders)} заказов`}</div></div>` : ''}
+  </div>`;
+}
+
+function draw() {
+  save();
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('on', x.dataset.t === S.tab));
+  document.querySelectorAll('#pTabs button').forEach(x => x.classList.toggle('on', x.dataset.k === S.key));
+  document.querySelectorAll('#chTabs button').forEach(x => x.classList.toggle('on', x.dataset.c === S.ch));
+  document.querySelectorAll('#clubTabs button').forEach(x => x.classList.toggle('on', +x.dataset.v === S.club));
+  const dates = S.tab === 'dates';
+  ['#pTabs', '#pMonth', '#pDates'].forEach(sel => $(sel).style.display = dates ? '' : 'none');
+  $('#pMonth').value = S.key === 'm' ? S.a.slice(0, 7) : '';
+  $('#pFrom').value = S.a; $('#pTo').value = S.b;
+  $('#pbar .row2').style.display = S.tab === 'health' ? 'none' : '';
+  const h = dates ? drawDates() : S.tab === 'health' ? drawHealth() : drawAutos();
+  $('#content').innerHTML = h;
+  if (S.tab === 'health') drawHealthCharts();
+  if (dates && D.revenue && $('#revChart')) revChart($('#revChart'), drawDates.buckets, drawDates.chans);
+}
+
+function drawDates() {
+  const a = S.a, b = S.b;
+  const rows = D.sends.filter(m => m[F.date].slice(0, 10) >= a && m[F.date].slice(0, 10) <= b && match(m));
+  const s = sum(rows), rv = D.revenue ? revenue(a, b) : null;
+  let h = `<p class="plabel"><b>${esc(rangeLabel(a, b))}</b> · ${S.ch === 'all' ? 'все каналы' : CH[S.ch][0]} · ${S.club ? 'только клуб ТНЖ' : 'вся школа'}${S.q ? ' · поиск «' + esc(S.q) + '»' : ''}</p>`;
+  h += kpis(s, ['Рассылок', 'Сколько разовых рассылок отправлено за период (каждый канал — отдельная рассылка).'], rv);
+
+  // выручка по дням/месяцам
+  const byDay = daysBetween(a, b) < 62, buckets = [];
+  const chans = Object.keys(CH);
+  for (let d = a; d <= b;) {
+    const e = byDay ? d : (monthLast(d) < b ? monthLast(d) : b);
+    const bk = {name: byDay ? dayLabel(d, true) : rangeLabel(d, e), label: byDay ? String(+d.slice(8)) : MON[+d.slice(5, 7) - 1] + (d.slice(5, 7) === '01' || !buckets.length ? ' ' + d.slice(2, 4) : ''), rub: 0, paid: 0, ch: {}, n: 0, sent: 0};
+    if (rv) for (const [day, v] of Object.entries(rv.byDay)) if (day >= d && day <= e) { bk.rub += v.rub; bk.paid += v.paid; for (const [c, x] of Object.entries(v.ch)) bk.ch[c] = (bk.ch[c] || 0) + x; }
+    rows.forEach(m => { const day = m[F.date].slice(0, 10); if (day >= d && day <= e) { bk.n++; bk.sent += m[F.sent]; } });
+    buckets.push(bk);
+    d = addDays(e, 1);
+  }
+  drawDates.buckets = buckets; drawDates.chans = chans;
+  if (rv) h += `<h2>Деньги с рассылок ${byDay ? 'по дням' : 'по месяцам'}</h2><p class="sub">Оплаты по ссылкам из писем и сообщений — по дню письма. Наведите на столбик, чтобы увидеть, сколько рассылок ушло в этот день.</p>
+  <div class="card"><div class="chart" id="revChart"></div><div class="legend">${chans.filter(c => buckets.some(x => x.ch[c])).map(c => `<span><i style="background:${CH[c][1]}"></i>${CH[c][0]}</span>`).join('')}</div></div>`;
+
+  // по дням
+  const groups = [];
+  rows.forEach(m => { const d = m[F.date].slice(0, 10); if (!groups.length || groups[groups.length - 1].d !== d) groups.push({d, rows: []}); groups[groups.length - 1].rows.push(m); });
+  let shownRows = 0, cut = groups.length;
+  for (let i = 0; i < groups.length; i++) { shownRows += groups[i].rows.length; if (shownRows > S.shown) { cut = Math.max(1, i); break; } }
+  h += `<h2>Рассылки по дням</h2><p class="sub">Каждый канал — отдельная строка. Проценты считаются от доставленных сообщений.</p>
+  <div class="card tbl"><div class="scroll"><table class="mt">${thead('Рассылка')}<tbody>`;
+  if (!groups.length) h += `<tr><td colspan="7" class="note">За выбранный период рассылок нет</td></tr>`;
+  groups.slice(0, cut).forEach(g => {
+    const gs = sum(g.rows), d = new Date(g.d + 'T12:00:00Z'), dr = rv && rv.byDay[g.d];
+    h += `<tr class="day"><td colspan="7"><span class="dd">${+g.d.slice(8)} ${MONG[+g.d.slice(5, 7) - 1]}${g.d.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + g.d.slice(0, 4) : ''}</span> <span class="wd">${WD[d.getUTCDay()]}</span>
+      <span class="ds">${g.rows.length} ${g.rows.length === 1 ? 'рассылка' : g.rows.length < 5 ? 'рассылки' : 'рассылок'} · доставлено <b>${fmt(gs.delivered)}</b> · открыли <b>${p1(share(gs.views, gs.delivered))}</b> · перешли <b>${p1(share(gs.clicks, gs.delivered))}</b>${dr && dr.paid ? ` · оплат <b>${dr.paid}</b> на <b>${rub(dr.rub)}</b>` : ''}</span></td></tr>`;
+    h += g.rows.map(m => mrow(m, `${CH[m[F.ch]][0]} · ${m[F.date].slice(11, 16) || ''}`)).join('');
+  });
+  h += `</tbody></table></div>${cut < groups.length ? `<button class="more" id="more">Показать ещё</button>` : ''}</div>`;
+
+  h += drawSubjects(rows);
+
+  // кампании
+  if (!rv) return h;
+  const camps = Object.values(rv.camps).filter(c => c.paid).sort((x, y) => y.rub - x.rub);
+  h += `<h2>Оплаты по кампаниям</h2><p class="sub">Какие кампании (метка utm_campaign в ссылках из рассылок) принесли оплаты за период.</p>
+  <div class="card"><div class="scroll"><table><thead><tr><th>Кампания</th><th>Канал</th>${S.club ? '' : '<th>Заказов</th>'}<th>Оплат</th><th>Сумма</th></tr></thead><tbody>
+  ${camps.length ? camps.slice(0, 30).map(c => `<tr><td>${esc(c.name)}</td><td>${CH[c.ch][0]}</td>${S.club ? '' : `<td>${fmt(c.orders)}</td>`}<td>${fmt(c.paid)}</td><td>${rub(c.rub)}</td></tr>`).join('') : `<tr><td colspan="5" class="note">Оплат по ссылкам из рассылок за период нет</td></tr>`}
+  </tbody></table></div></div>`;
+  return h;
+}
+
+/* ---------- темы писем: признаки, по которым почтовики отправляют в спам ---------- */
+// 199 стоп-слов для почты (список ePochta); короткие слова — только целиком, длинные — с любым окончанием
+const STOP_WORDS = ['# один', '$$$', '0% риск', '0%', '100% free', '100%', '50% скидка', '777', '99,9%', '99%', 'only $', 'penis', 'save $', 'viagra', 'vicodin', 'vip',
+  'акции', 'банкротство', 'без вложений', 'без обязательств', 'без опыта', 'без риска', 'безлимитный', 'безпроцентный кредит', 'безрисковый', 'бесплатная консультация',
+  'бесплатная установка', 'бесплатно', 'бизнес на дому', 'бонус', 'бренд', 'в день', 'в неделю', 'в месяц', 'ваш статус', 'виагра', 'вклад', 'возврат денег', 'выплата',
+  'гарантии', 'гарантированный', 'гарантия возврата денег', 'дебет', 'действуй сейчас', 'деньги', 'дешевая ипотека', 'дешево', 'диагностика', 'долг', 'доллар', 'дом',
+  'домашний бизнес', 'домен', 'дополнительный доход', 'дорогой', 'доступ', 'доступный', 'доход', 'друг', 'заказ', 'заказать', 'запусти свой бизнес', 'зарабатывай',
+  'зарабатывай дома', 'заработай', 'заработок', 'зарегистрируйтесь', 'зарегистрируйтесь сейчас', 'зачем платить больше', 'здесь', 'знаменитость', 'избавьтесь', 'излечени',
+  'инструкции', 'информация по вашему запросу', 'ипотека', 'казино', 'карта', 'коллекторы', 'коммерческое предложение', 'коммерция', 'конкурс', 'конфиденциально', 'копия',
+  'кредит', 'кредитное бюро', 'кредитные карты', 'кредиторы', 'купить напрямую', 'купить', 'лекарства', 'лучшее предложение', 'маркетинг', 'миллион долларов', 'миллион',
+  'миллионер', 'минимальный платеж', 'множество', 'нажми здесь', 'нажми сюда', 'название бренда', 'наличные', 'начни сейчас', 'не медли', 'не проходите мимо', 'не спам',
+  'не удаляйте', 'неограниченные возможности', 'неограниченный доступ', 'новинка', 'новый', 'номер один', 'образец', 'откройте', 'перейдите по ссылке', 'персональная скидка',
+  'пищевые добавки', 'победа', 'победитель', 'подписка', 'подпишитесь', 'позвоните', 'поздравляем', 'покупка', 'получатель', 'получи миллион', 'получи сейчас', 'порно',
+  'посетите наш сайт', 'последний шанс', 'похудение', 'предложение ограничено', 'преимущество', 'привет', 'приз', 'подарок', 'продажи', 'процентная ставка', 'прочитайте',
+  'реклама', 'рефинансирование', 'решение', 'розыгрыш', 'рынок', 'сам себе начальник', 'самая низкая цена', 'самые низкие цены', 'сбережения', 'сбросьте вес', 'свобода',
+  'сделай это сейчас', 'сделка', 'секрет успеха', 'секс', 'сертифицированный', 'скидка', 'сохраните', 'специальная скидка', 'специально для вас', 'специальное предложение',
+  'специальное средство', 'сравните', 'средний', 'срок', 'ставки на спорт', 'сто процентов бесплатно', 'стоп', 'телефон', 'тест', 'только сейчас', 'транзакции', 'тысяча',
+  'тысячи', 'увеличь трафик', 'удовлетворение', 'удовольствие 100%', 'условия', 'успех', 'фантастический', 'форма', 'фриланс', 'храп', 'чудо', 'шанс', 'эксклюзив'];
+const STOP_RE = new RegExp('(^|[^а-яёa-z0-9])(' + STOP_WORDS.slice().sort((x, y) => y.length - x.length)
+  .map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + (w.length <= 4 && /[а-яёa-z]$/.test(w) ? '[а-яё]?(?![а-яёa-z])' : '')).join('|') + ')', 'i');
+
+function subjectFlags(text) {
+  const f = {}, m = String(text || '').toLowerCase().match(STOP_RE);
+  if (m) f.stop = m[2];
+  if (/(^|[^А-ЯЁA-Z])[А-ЯЁA-Z]{4,}(?![а-яёa-z])/.test(text)) f.caps = 1;
+  if ((String(text).match(/!/g) || []).length >= 2) f.excl = 1;
+  if (String(text).length > 60) f.long = 1;
+  if (/[\u{1F300}-\u{1FAFF}☀-➿]/u.test(text)) f.emoji = 1;
+  if (/\{[^}]*(name|имя)[^}]*\}/i.test(text)) f.name = 1;
+  return f;
+}
+const FLAG_NAMES = {stop: 'стоп-слово', caps: 'КАПС', excl: '«!!»', long: 'длиннее 60 знаков', emoji: 'эмодзи', name: 'обращение по имени'};
+function flagBadges(m) {
+  if (m[F.ch] !== 'mail') return '';
+  const f = subjectFlags(m[F.subject] || m[F.title]), out = [];
+  if (f.stop) out.push(`<span class="flag" data-tip="Слово из списка 199 стоп-слов для почты. Само по себе письмо в спам не отправит, но вместе с другими признаками — может.">стоп-слово «${esc(f.stop)}»</span>`);
+  if (f.caps) out.push('<span class="flag" data-tip="Слово ЗАГЛАВНЫМИ буквами — спам-фильтры это не любят.">КАПС</span>');
+  if (f.excl) out.push('<span class="flag" data-tip="Несколько восклицательных знаков — признак спама для почтовых фильтров.">«!!»</span>');
+  if (f.long) out.push('<span class="flag soft" data-tip="Длинная тема обрезается в списке писем, особенно на телефоне. Лучше до 60 знаков.">длинная тема</span>');
+  return out.length ? `<span class="flags">${out.join('')}</span>` : '';
+}
+
+const MIN_SENT = 300;  // письма меньше — слишком маленькая выборка для сравнения
+const openOf = ms => { const s = sum(ms); return share(s.views, s.delivered); };
+const diffCell = (x, y) => {
+  if (x == null || y == null) return '<td>—</td>';
+  const d = Math.round((x - y) * 10) / 10;
+  return d === 0 ? '<td>0 п.п.</td>' : `<td class="${d > 0 ? 'pos' : 'neg'}">${d > 0 ? '+' : '−'}${String(Math.abs(d)).replace('.', ',')} п.п.</td>`;
+};
+const TYPES = ['Анонс', 'Напоминание', 'Дожим', 'Приглашение', 'Предложение', 'Запись', 'Эфир', 'Прогрев', 'Рассылка', 'Письмо'];
+const typeOf = m => TYPES.find(t => new RegExp(t, 'i').test(m[F.title])) || 'Другое';
+
+function drawSubjects(rows) {
+  const mails = rows.filter(m => m[F.ch] === 'mail' && m[F.sent] >= MIN_SENT);
+  let h = `<h2>Темы писем</h2><p class="sub">Что влияет на открываемость на ваших данных: признаки, по которым почтовики отправляют письма в спам, и типы писем. Только почта, письма от ${MIN_SENT} получателей за выбранный период. «п.п.» — разница в процентных пунктах открываемости.</p>`;
+  if (mails.length < 5) return h + '<div class="card"><p class="note">За период мало массовых писем для сравнения — выберите период подлиннее.</p></div>';
+  const flags = mails.map(m => subjectFlags(m[F.subject] || m[F.title]));
+  const feat = ['stop', 'caps', 'excl', 'emoji', 'long', 'name'].map(k => {
+    const a = mails.filter((m, i) => flags[i][k]), b = mails.filter((m, i) => !flags[i][k]);
+    return `<tr><td>${FLAG_NAMES[k]}</td><td>${a.length}</td><td>${p1(a.length ? openOf(a) : null)}</td><td>${p1(b.length ? openOf(b) : null)}</td>${a.length && b.length ? diffCell(openOf(a), openOf(b)) : '<td>—</td>'}</tr>`;
+  }).join('');
+  const byType = {};
+  mails.forEach(m => (byType[typeOf(m)] = byType[typeOf(m)] || []).push(m));
+  const types = Object.entries(byType).sort((x, y) => y[1].length - x[1].length).map(([t, ms]) => { const s = sum(ms);
+    return `<tr><td>${t}</td><td>${ms.length}</td><td>${p1(share(s.views, s.delivered))}</td><td>${p1(share(s.clicks, s.delivered))}</td><td>${p1(share(s.unsub, s.delivered))}</td></tr>`; }).join('');
+  const ranked = mails.filter(m => m[F.sent] >= 500).map(m => [m, openOf([m])]).filter(x => x[1] != null).sort((x, y) => y[1] - x[1]);
+  const top = list => list.map(([m, v]) => `<div class="row"><span>${esc(m[F.subject] || m[F.title])}<small class="rsub">${dayLabel(m[F.date].slice(0, 10), true)} · ${fmt(m[F.sent])} писем</small></span><span class="n">${p1(v)}</span></div>`).join('');
+  const noName = flags.every(f => !f.name);
+  h += `<div class="grid2">
+    <div class="card"><h3>Признаки в теме ${q('Сравнение открываемости писем с признаком и без него. Зелёный — с признаком открывают лучше, красный — хуже. Если писем с признаком мало (меньше 5), разница может быть случайной.')}</h3>
+      <div class="scroll"><table><thead><tr><th>Признак</th><th>Писем</th><th>Открыли с ним</th><th>Без него</th><th>Разница</th></tr></thead><tbody>${feat}</tbody></table></div>
+      ${noName ? '<p class="note">Ни в одной теме нет обращения по имени. Обращение по имени повышает открываемость: в GetCourse в тему можно вставить имя переменной {object.first_name}. Попробуйте на части писем и сравните здесь.</p>' : ''}</div>
+    <div class="card"><h3>Типы писем ${q('Тип определяется по слову в названии рассылки: Анонс, Напоминание, Дожим, Приглашение и т. д.')}</h3>
+      <div class="scroll"><table><thead><tr><th>Тип</th><th>Писем</th><th>Открыли</th><th>Перешли</th><th>Отписки</th></tr></thead><tbody>${types}</tbody></table></div></div>
+  </div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card"><h3>Лучшие темы по открываемости ${q('Письма от 500 получателей за период. Смотрите, что общего у тем сверху, и пробуйте этот подход в новых письмах.')}</h3>${top(ranked.slice(0, 7))}</div>
+    <div class="card"><h3>Худшие темы ${q('Письма от 500 получателей за период с самой низкой открываемостью.')}</h3>${top(ranked.slice(-7).reverse())}</div>
+  </div>`;
+  return h;
+}
+
+/* ---------- здоровье рассылки ---------- */
+const weekStart = d => addDays(d, -((new Date(d + 'T12:00:00Z').getUTCDay() + 6) % 7));
+
+// почта по неделям: массовые письма (от 100 получателей)
+function weekly() {
+  const mails = D.sends.filter(m => m[F.ch] === 'mail' && m[F.sent] >= 100);
+  if (!mails.length) return [];
+  const map = {};
+  mails.forEach(m => {
+    const k = weekStart(m[F.date].slice(0, 10)), w = map[k] || (map[k] = {k, n: 0, sent: 0, undelivered: 0, views: 0, clicks: 0, unsub: 0, base: 0});
+    w.n++; for (const f of ['sent', 'undelivered', 'views', 'clicks', 'unsub']) w[f] += m[F[f]];
+    w.base = Math.max(w.base, m[F.total]);
+  });
+  const out = [], cur = weekStart(TODAY);
+  for (let k = Object.keys(map).sort()[0]; k <= cur; k = addDays(k, 7)) {
+    const w = map[k] || {k, n: 0, sent: 0, undelivered: 0, views: 0, clicks: 0, unsub: 0, base: 0}, del = w.sent - w.undelivered;
+    out.push({...w, name: 'неделя с ' + dayLabel(k, true), label: dayLabel(k), partial: k === cur,
+      open: share(w.views, del), und: share(w.undelivered, w.sent), uns: share(w.unsub, del), per: w.base ? w.sent / w.base : 0});
+  }
+  return out;
+}
+
+function windowStats(ws) {
+  const s = ws.reduce((a, w) => { for (const f of ['n', 'sent', 'undelivered', 'views', 'unsub']) a[f] += w[f]; a.per += w.per; return a; }, {n: 0, sent: 0, undelivered: 0, views: 0, unsub: 0, per: 0});
+  const del = s.sent - s.undelivered;
+  return {...s, open: share(s.views, del), und: share(s.undelivered, s.sent), uns: share(s.unsub, del), per: ws.length ? s.per / ws.length : 0};
+}
+
+const ST = {ok: ['ok', '✓', 'Норма'], warn: ['warn', '!', 'Внимание'], bad: ['bad', '✕', 'Проблема']};
+const alertCard = (st, title, value, cmp, advice) => `<div class="card alert ${ST[st][0]}"><div class="ah"><span class="badge">${ST[st][1]} ${ST[st][2]}</span><span class="at">${title}</span></div><div class="av">${value}</div><div class="ac">${cmp}</div>${st !== 'ok' ? `<p class="aa">${advice}</p>` : ''}</div>`;
+const pp = v => v == null ? '—' : String(Math.round(v * 100) / 100).replace('.', ',') + '%';
+
+function drawHealth() {
+  const W = weekly(), done = W.filter(w => !w.partial);
+  const L = windowStats(done.slice(-4)), P = windowStats(done.slice(-16, -4));
+  let h = `<p class="plabel"><b>Почта: последние 4 полные недели</b> в сравнении с 12 неделями до них · массовые письма от 100 получателей</p>`;
+  if (done.length < 8) return h + '<div class="card" style="margin-top:16px"><p class="note">Мало истории для сравнения.</p></div>';
+
+  const drop = L.open != null && P.open ? (L.open - P.open) / P.open * 100 : 0;
+  const perUp = P.per ? L.per / P.per : 1;
+  const dns = D.dns, dnsBad = dns && dns.problems.length;
+  h += `<div class="alerts">
+    ${alertCard(drop < -20 ? 'bad' : drop < -10 ? 'warn' : 'ok', 'Открываемость', pp(L.open), `было ${pp(P.open)} · ${drop >= 0 ? '+' : '−'}${Math.abs(Math.round(drop))}%`,
+      'Резкое падение открываемости — главный признак, что письма уходят в спам или база устала. Проверьте письмо в Mail-Tester, загляните в Постмастеры Яндекса и Mail.ru, сократите частоту и почистите базу (ниже).')}
+    ${alertCard(L.und > 1 ? 'bad' : L.und > 0.5 ? 'warn' : 'ok', 'Не доставлено', pp(L.und), `было ${pp(P.und)} · норма до 0,5%`,
+      'Растёт доля несуществующих и заблокированных адресов. Каждое такое письмо снижает репутацию отправителя — уберите из рассылки адреса с ошибками доставки.')}
+    ${alertCard(L.uns > 0.5 ? 'bad' : L.uns > 0.2 ? 'warn' : 'ok', 'Отписки', pp(L.uns), `было ${pp(P.uns)} · норма до 0,2%`,
+      'Люди отписываются чаще обычного — письма не совпадают с ожиданиями. Проверьте частоту и темы; кто не отписался, а раздражён, нажимает «Спам».')}
+    ${alertCard(L.per > 7 || perUp > 2 ? 'bad' : L.per > 4 || perUp > 1.5 ? 'warn' : 'ok', 'Писем на человека в неделю', String(Math.round(L.per * 10) / 10).replace('.', ','), `было ${String(Math.round(P.per * 10) / 10).replace('.', ',')} · ${fmt(L.n / 4)} рассылок в неделю`,
+      'Частота выросла. Слишком частые письма ведут к жалобам на спам. Держите ровный темп и не отправляйте всю базу каждое письмо — используйте сегменты.')}
+    ${D.inactive && D.inactive.rows ? (() => { const r = D.inactive.rows.find(x => x.days === 90) || D.inactive.rows[0], sh = share(r.inactive, r.received);
+      return alertCard(sh > 40 ? 'bad' : sh > 25 ? 'warn' : 'ok', `Не открывают почту ${r.days} дней`, p1(sh), `${fmt(r.inactive)} из ${fmt(r.received)} получавших письма на почту`,
+        'Большая доля «молчащей» базы снижает репутацию отправителя. Запустите реактивацию и исключите неоткрывающих из массовых рассылок (блок «Кто не открывает письма» ниже).'); })() : ''}
+    ${dns ? alertCard(dnsBad ? 'bad' : 'ok', 'Настройки домена', dnsBad ? `${dns.problems.length} ${dns.problems.length === 1 ? 'проблема' : 'проблемы'}` : 'в порядке', esc(dns.domain) + ' · SPF, DKIM, DMARC',
+      'Подробности и как исправить — в блоке «Домен» ниже.') : ''}
+  </div>`;
+
+  h += `<h2>Почта по неделям</h2><p class="sub">Затенены последние 4 недели, с которыми идёт сравнение. Текущая неделя — пустой точкой, она ещё идёт.</p>
+  <div class="grid2">
+    <div class="card"><h3>Открываемость ${q('Доля доставленных писем, которые открыли.')}</h3><div class="chart" id="hOpen"></div></div>
+    <div class="card"><h3>Писем на человека в неделю ${q('Сколько массовых писем в неделю в среднем получает один подписчик: все отправленные письма недели ÷ размер базы.')}</h3><div class="chart" id="hPer"></div></div>
+    <div class="card"><h3>Не доставлено ${q('Доля отправленных писем, которые не дошли до адресата.')}</h3><div class="chart" id="hUnd"></div></div>
+    <div class="card"><h3>Отписки ${q('Доля доставленных писем, после которых человек отписался.')}</h3><div class="chart" id="hUns"></div></div>
+  </div>`;
+  drawHealth.weeks = W.slice(-26);
+
+  // домен
+  if (dns) {
+    const row = (name, ok, val, tip) => `<div class="row"><span>${ok ? '<b class="pos">✓</b>' : '<b class="neg">✕</b>'} ${name} ${q(tip)}</span><span class="n mono">${esc(val)}</span></div>`;
+    h += `<h2>Домен ${esc(dns.domain)}</h2><p class="sub">Технические записи, по которым почтовики решают, доверять ли письмам. Проверяются автоматически при каждом обновлении.</p>
+    <div class="card">
+      ${row('SPF', dns.spf.length === 1, dns.spf.join(' | ') || 'нет записи', 'Список серверов, которым разрешено отправлять письма от вашего домена. Должны быть серверы GetCourse (gca.to).')}
+      ${row('DKIM', dns.dkim, dns.dkim ? 'подпись GetCourse есть (getcourse._domainkey)' : 'нет подписи', 'Цифровая подпись каждого письма — доказывает, что письмо не подделано.')}
+      ${row('DMARC', dns.dmarc.length === 1 && !dnsBad, dns.dmarc.join(' | ') || 'нет записи', 'Что делать почтовику с письмом, которое не прошло SPF/DKIM. Запись должна быть ровно одна.')}
+      ${dns.problems.length ? `<div class="probs"><b>Что не так:</b><ul>${dns.problems.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+        <b>Как исправить:</b> DNS этого домена ведётся в GetCourse (Профиль → Настройки аккаунта → Домены → ${esc(dns.domain)} → DNS-записи). Удалите все TXT-записи с именем <code>_dmarc</code> и создайте одну:
+        <code class="block">v=DMARC1; p=none; rua=mailto:ВАШ_ЯЩИК@${esc(dns.domain)}; fo=1</code>
+        Вместо ВАШ_ЯЩИК — реальный ящик на домене, куда будут приходить отчёты почтовиков. Изменения вступают в силу за несколько часов, здесь проверка обновится сама.</div>` : ''}
+      ${dns.notes.map(n => `<p class="note">${esc(n)}</p>`).join('')}
+    </div>`;
+  }
+
+  // база
+  const months = {};
+  D.sends.filter(m => m[F.ch] === 'mail' && m[F.sent] >= 100).forEach(m => {
+    const k = m[F.date].slice(0, 7), x = months[k] || (months[k] = {k, rows: [], base: 0});
+    x.rows.push(m); x.base = Math.max(x.base, m[F.total]);
+  });
+  const mrowsB = Object.values(months).sort((x, y) => y.k.localeCompare(x.k)).slice(0, 12);
+  h += `<h2>Состояние базы</h2><p class="sub">База должна быть актуальной: растущее «не доставлено» и падающая открываемость при растущей базе — значит, в ней копятся неживые адреса.</p>
+  <div class="card"><div class="scroll"><table><thead><tr><th>Месяц</th><th>Писем</th><th>База ${q('Самая большая рассылка месяца — сколько адресов в основной базе почты.')}</th><th>Не получили ${q('Доля базы, которой GetCourse не отправил письмо: отписались, не подтвердили адрес или нет согласия на рассылку.')}</th><th>Не доставлено</th><th>Отписались</th><th>Открыли</th></tr></thead><tbody>
+  ${mrowsB.map(x => { const s = sum(x.rows), big = x.rows.reduce((a, m) => m[F.total] > a[F.total] ? m : a);
+    return `<tr><td>${MONF[+x.k.slice(5) - 1]} ${x.k.slice(0, 4)}</td><td>${x.rows.length}</td><td>${fmt(x.base)}</td><td>${p1(share(big[F.total] - big[F.sent], big[F.total]))}</td><td>${pp(share(s.undelivered, s.sent))}</td><td>${fmt(s.unsub)}</td><td>${p1(share(s.views, s.delivered))}</td></tr>`; }).join('')}
+  </tbody></table></div></div>`;
+
+  // кто давно не открывает письма
+  const ia = D.inactive;
+  if (ia && ia.rows) {
+    const hist = ia.history || [];
+    const prev = hist.length > 1 ? hist[hist.length - 2] : null;
+    h += `<h2>Кто не открывает письма на почту</h2><p class="sub">Люди, которым за период приходили письма на почту, но они не открыли ни одного. Только почта: Telegram и MAX не считаются, потому что там GetCourse засчитывает открытие лишь при переходе по ссылке и почти все выглядели бы «неоткрывающими». Считает сам GetCourse, данные на ${esc(ia.updated.slice(8, 10) + '.' + ia.updated.slice(5, 7) + ', ' + ia.updated.slice(11))}.</p>
+    <div class="grid3">${ia.rows.map(r => { const sh = share(r.inactive, r.received), was = prev && prev[r.days] ? prev[r.days][1] : null;
+      return `<div class="card kpi"><div class="l">Не открыли ни одного за ${r.days} дней ${q(`Получали письма на почту за этот срок (${fmt(r.mailings || 0)} рассылок), но не открыли ни одного. Сообщения в Telegram и MAX не учитываются.`)}</div>
+        <div class="v">${fmt(r.inactive)}</div><div class="s">${p1(sh)} из ${fmt(r.received)} получавших${was != null ? ` · было ${fmt(was)}` : ''}</div>
+        <a class="more open-gc" href="${esc(r.url)}" target="_blank" rel="noopener">Открыть список в GetCourse →</a>${r.exact ? '' : '<div class="s">в списке GetCourse также те, кому письма не приходили</div>'}</div>`; }).join('')}
+    </div>
+    <p class="note">Считаются только письма на почту, сообщения в Telegram и MAX не учитываются. Сроки до 90 дней: за более долгий период почтовых рассылок так много, что GetCourse не принимает такой фильтр. Список откроется в GetCourse (нужно быть авторизованным). Для 30 дней там ровно эти люди. Для более длинных сроков ссылка была бы слишком длинной, поэтому в список попадают все, кто не открыл ни одного письма, в том числе те, кому письма не отправлялись (например, отписавшиеся). Что делать: отправить им короткую цепочку реактивации из 3 писем — напомнить о себе и предложить подтвердить подписку, спросить, о чём им интересно читать, дать бонус. Кто не откроет и её — исключить из массовых рассылок: такие адреса снижают репутацию отправителя и тянут письма в спам.</p>`;
+  }
+
+  // чек-лист и шаблон
+  const tpl = `Здравствуйте! Наши письма попадают в спам, прошу помочь разобраться. Мы не отправляем спам:
+1. После оплаты наших продуктов клиенты получают пошаговые инструкции. Чтобы они точно их прочитали, повторяем письмо в течение недели, если его не открыли.
+2. Письма уходят после регистрации на наши мероприятия, в них есть подтверждение согласия на рассылку. Например, напоминаем о вебинаре, на который человек записался.
+3. Домен и доменная почта настроены по всем правилам: SPF, DKIM, DMARC, FBL, MX — это можно проверить в любом сервисе тестирования почты.
+4. Отвечаем людям в техподдержке — ответы приходят с нашей доменной почты.
+5. Пользователи получают письма для входа на платформу и восстановления пароля.`;
+  h += `<h2>Если письма попадают в спам</h2><p class="sub">Порядок действий: от самого простого к обращению в поддержку почты.</p>
+  <div class="grid2">
+    <div class="card"><h3>Чек-лист</h3><ol class="check">
+      <li><b>Проверьте письмо</b> перед рассылкой в <a href="https://www.mail-tester.com/" target="_blank" rel="noopener">Mail-Tester</a>: отправьте на выданный адрес — получите оценку и что исправить.</li>
+      <li><b>Посмотрите репутацию</b> в постмастерах: <a href="https://postoffice.yandex.ru/" target="_blank" rel="noopener">Яндекс</a>, <a href="https://postmaster.mail.ru/" target="_blank" rel="noopener">Mail.ru</a>, <a href="https://postmaster.google.com/" target="_blank" rel="noopener">Google</a> — там видны жалобы на спам, которых нет в GetCourse.</li>
+      <li><b>Домен:</b> SPF, DKIM и одна корректная DMARC-запись (блок «Домен» выше).</li>
+      <li><b>База:</b> уберите адреса с ошибками доставки и тех, кто 3 месяца не открывает письма; старую базу сначала реактивируйте.</li>
+      <li><b>Частота:</b> ровный темп, без резких скачков; не вся база на каждое письмо.</li>
+      <li><b>Тема:</b> без КАПСа, «!!» и стоп-слов, до 60 знаков; лучше с именем (блок «Темы писем» на вкладке «Рассылки по датам»).</li>
+      <li><b>Письмо:</b> больше текста, чем картинок; ссылки текстом, без голых и сокращённых URL; без вложений; понятная кнопка отписки.</li>
+      <li><b>Не помогло</b> — напишите в поддержку почтовика (<a href="https://help.mail.ru/mail/spam/sender" target="_blank" rel="noopener">Mail.ru</a>, <a href="https://yandex.ru/support/mail/feedback.html" target="_blank" rel="noopener">Яндекс</a>) по шаблону справа и приложите оригинал письма из папки «Спам».</li>
+    </ol></div>
+    <div class="card"><h3>Шаблон письма в поддержку почты</h3><pre class="tpl" id="tpl">${esc(tpl)}</pre><button class="more" data-copy="tpl">Скопировать текст</button></div>
+  </div>`;
+  return h;
+}
+
+function healthLine(el, rows, key, opts = {}) {
+  const pts = rows.map((r, i) => [i, r[key]]).filter(p => p[1] != null);
+  if (pts.length < 2) { el.innerHTML = '<p class="note">Мало данных</p>'; return; }
+  const W = 520, H = 200, L = 44, B = 24, T = 12, n = rows.length;
+  const max = opts.max || niceMax(Math.max(...pts.map(p => p[1])) * 1.1);
+  const x = i => L + (W - L - 10) * i / (n - 1), y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  const done = rows.filter(r => !r.partial).length;
+  s += `<rect x="${x(Math.max(0, done - 4)) - 6}" y="${T}" width="${x(done - 1) - x(Math.max(0, done - 4)) + 12}" height="${H - T - B}" fill="var(--grid)" opacity=".7"/>`;
+  for (let i = 0; i <= 4; i++) { const v = max * i / 4; s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${opts.fmt(v)}</text>`; }
+  s += `<path d="${pts.map((p, j) => (j ? 'L' : 'M') + x(p[0]) + ',' + y(p[1])).join('')}" fill="none" stroke="var(--s-renew)" stroke-width="2" stroke-linejoin="round"/>`;
+  const step = Math.ceil(n / 7);
+  rows.forEach((r, i) => {
+    if (i % step === 0) s += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${esc(r.label)}</text>`;
+    if (r[key] == null) return;
+    const tip = `<b>${esc(r.name)}</b><br>${opts.label}: <b>${opts.fmt(r[key])}</b><br>Писем: ${r.n}, отправлено ${fmt(r.sent)}`;
+    s += `<g class="hov" data-html="${esc(tip)}"><rect x="${x(i) - (W - L) / n / 2}" y="${T}" width="${(W - L) / n}" height="${H - T - B}" fill="transparent"/><circle cx="${x(i)}" cy="${y(r[key])}" r="2.6" fill="${r.partial ? '#fff' : 'var(--s-renew)'}" stroke="var(--s-renew)" stroke-width="1.6"/></g>`;
+  });
+  el.innerHTML = s + '</svg>';
+  bindHover(el);
+}
+
+function drawHealthCharts() {
+  const rows = drawHealth.weeks || [];
+  const pf = v => String(Math.round(v * 100) / 100).replace('.', ',') + '%';
+  if ($('#hOpen')) healthLine($('#hOpen'), rows, 'open', {label: 'Открыли', fmt: v => String(Math.round(v * 10) / 10).replace('.', ',') + '%'});
+  if ($('#hPer')) healthLine($('#hPer'), rows, 'per', {label: 'Писем на человека', fmt: v => String(Math.round(v * 10) / 10).replace('.', ',')});
+  if ($('#hUnd')) healthLine($('#hUnd'), rows, 'und', {label: 'Не доставлено', fmt: pf});
+  if ($('#hUns')) healthLine($('#hUns'), rows, 'uns', {label: 'Отписки', fmt: pf});
+}
+
+function drawAutos() {
+  const rows = D.autos.filter(match), s = sum(rows);
+  let h = `<p class="plabel"><b>Автописьма за всё время</b> · ${S.ch === 'all' ? 'все каналы' : CH[S.ch][0]} · ${S.club ? 'только клуб ТНЖ' : 'вся школа'}${S.q ? ' · поиск «' + esc(S.q) + '»' : ''}</p>`;
+  h += kpis(s, ['Автописем', 'Письма, которые уходят автоматически по событию (после оплаты, регистрации и т. п.). Статистика накопительная — с момента создания письма.'], null);
+  h += `<h2>Автописьма</h2><p class="sub">От самых частых к редким. Статистика накопительная, с момента создания письма.</p>
+  <div class="card tbl"><div class="scroll"><table class="mt">${thead('Автописьмо')}<tbody>
+  ${rows.length ? rows.slice(0, S.shown).map(m => mrow(m, `${CH[m[F.ch]][0]} · создано ${dayLabel(m[F.date], true)}`)).join('') : '<tr><td colspan="7" class="note">Нет автописем</td></tr>'}
+  </tbody></table></div>${rows.length > S.shown ? `<button class="more" id="more">Показать ещё</button>` : ''}</div>`;
+  return h;
+}
+</script>
+</body>
+</html>
